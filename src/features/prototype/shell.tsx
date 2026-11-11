@@ -40,8 +40,14 @@ export function PageTitle({ children, action }: { children: ReactNode; action?: 
     </div>
   );
 }
+/** Instrument C15: dashed frame, a label and one sentence; no illustration, no orange. */
 export function Empty({ children }: { children: ReactNode }) {
-  return <div className="prototype-panel">{children}</div>;
+  return (
+    <div className="empty">
+      <span className="t-label">Pusto</span>
+      <p>{children}</p>
+    </div>
+  );
 }
 export function NotFound() {
   return (
@@ -111,7 +117,7 @@ export function Shell() {
     </>
   );
   return (
-    <div className="min-h-dvh bg-background text-foreground">
+    <div className="min-h-dvh text-foreground">
       <a
         href="#main"
         className="skip-link"
@@ -127,7 +133,9 @@ export function Shell() {
           <div className="mobile-header">
             <Link to="/" className="brand">
               <BrandMark />
-              DoRoboty.ai
+              <span>
+                DoRoboty<span className="wordmark-suffix">.ai</span>
+              </span>
             </Link>
             <Button
               aria-label={menuAt === pathname ? "Zamknij menu" : "Otwórz menu"}
@@ -148,7 +156,9 @@ export function Shell() {
           >
             <Link className="brand" to="/">
               <BrandMark />
-              DoRoboty.ai
+              <span>
+                DoRoboty<span className="wordmark-suffix">.ai</span>
+              </span>
             </Link>
             <div className="workspace-label">
               <span className="workspace-avatar">{person.name[0]}</span>
@@ -204,7 +214,7 @@ export function Shell() {
         </div>
       ) : (
         <>
-          <header className="bg-background/95 shadow-[var(--gui-divider-bottom-shadow)] backdrop-blur supports-[backdrop-filter]:bg-background/80">
+          <header className="site-topbar">
             <div className="mx-auto flex h-16 max-w-[1360px] items-center justify-between gap-4 px-5 lg:px-8">
               <Link
                 className="flex items-center gap-2.5 text-base font-semibold tracking-[var(--gui-tracking-s)]"
@@ -212,7 +222,9 @@ export function Shell() {
                 aria-label="DoRoboty.ai — strona główna"
               >
                 <BrandMark />
-                <span>DoRoboty.ai</span>
+                <span>
+                  DoRoboty<span className="wordmark-suffix">.ai</span>
+                </span>
               </Link>
               <nav aria-label="Główna nawigacja" className="flex items-center gap-2 sm:gap-5">
                 {navigation.map((item) => (
@@ -282,10 +294,12 @@ export function Shell() {
           <main id="main" ref={main} tabIndex={-1} className="outline-none">
             {content}
           </main>
-          <footer className="bg-muted/40 text-foreground shadow-[var(--gui-divider-top-shadow)]">
+          <footer className="text-foreground">
             <div className="mx-auto grid max-w-[1360px] gap-10 px-5 py-12 sm:grid-cols-2 lg:px-8">
               <div>
-                <p className="text-base font-semibold">DoRoboty.ai</p>
+                <p className="brand">
+                  DoRoboty<span className="wordmark-suffix">.ai</span>
+                </p>
                 <p className="mt-3 max-w-lg text-sm leading-relaxed text-muted-foreground">
                   Praca dla ludzi, którzy potrafią z AI zbudować coś wartościowego — nie tylko
                   wpisać je do CV.
@@ -303,7 +317,7 @@ export function Shell() {
                 </Link>
               </nav>
             </div>
-            <div className="px-5 py-4 text-xs text-muted-foreground shadow-[var(--gui-divider-top-shadow)] lg:px-8">
+            <div className="footer-legal px-5 py-4 text-muted-foreground lg:px-8">
               <div className="mx-auto max-w-[1360px]">
                 © {new Date().getFullYear()} DoRoboty.ai — od Superhero.tech
               </div>

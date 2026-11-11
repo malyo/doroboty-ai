@@ -1,0 +1,272 @@
+/* DoRoboty.ai — kierunek „Instrument” (propozycja ze studium 2026-11-09, nie zatwierdzona marka).
+   Język kształtu: RAMKI. Kąty proste, obrys 1 px, tabelaryczny podział — surowo jak w Bauhausie, ale z typografią „wydania”.
+   Wszystkie reguły są pod klasą .ins, żeby nie kolidować z istniejącym CSS projektu.
+   Fonty: DM Mono — tytuły i dane, Departure Mono (lokalnie) — etykiety, Nunito Sans — tekst, Doto — liczniki pulpitu. Google Fonts:
+   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Doto:wght@700&display=swap" rel="stylesheet"> */
+
+/* Departure Mono (Helena Zhang, SIL OFL 1.1, v1.500) — krój „kodowy” do etykiet. Plik: assets/fonts/.
+   scripts/inline_css.py zamienia ten url na data: URI, żeby strona działała samodzielnie.
+   Autorka zaleca rozmiary w krokach co 11 px — etykiety mają dokładnie 11 px. */
+@font-face{font-family:"Departure Mono";src:url("fonts/DepartureMono-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+
+.ins{
+  /* kolor — źródło w references/visual-system.md */
+  --paper:#f2f2f2;        /* tło strony (Nothing, zmierzone) */
+  --surface:#fcfcfc;      /* wnętrze ramek (Nothing, zmierzone) */
+  --ink:#1c1c1c;          /* tekst główny (Nothing, zmierzone) */
+  --mute:#555555;         /* meta, etykiety. #555, bo tło to gradient „niebo” (6,1:1 na niebie, 7,3:1 na --surface). #777 Nothing i #6b6b6b nie spełniały AA na gradiencie */
+  --chip:#e3e3e3;         /* wypełnienia neutralne (Nothing, zmierzone) */
+  --frame:#8a8a8a;        /* RAMKA zewnętrzna: 3,4:1 do --surface — spełnia WCAG 1.4.11 (obrys komponentu ≥ 3:1) */
+  --rule:#d9d9d9;         /* linie wewnątrz ramek (podział wierszy, kv, spec) */
+  --line-strong:var(--frame);
+  --console:#0b0e12;      /* pulpit + wiersze wybrane (Oxide oklch(0.162 0.01 260)) */
+  --console-ink:#dedede;  /* tekst na pulpicie (Oxide) */
+  --console-mute:#a3a4a5; /* meta na pulpicie (Oxide) */
+  --console-line:#30353d; /* ramki na ciemnym (propozycja) */
+  --signal:#00d892;       /* „dostępny” — TYLKO na ciemnym tle (Oxide akcent) */
+  --signal-ink:#00503a;   /* „dostępny” na jasnym tle (TE, wiersz EP-40) */
+  --signal-tint:#dcf3ea;  /* tło plakietki „dostępny” (propozycja) */
+  --signal-deep:#0e3b2c;  /* tło plakietki „dostępny” na ciemnym (propozycja) */
+  --action:#ff5a1f;       /* JEDYNA akcja główna (.cta). Pomarańcz TE (szacowany z moodboardu B1). Tekst na nim: --ink (5,5:1) */
+  --action-hover:#ff7a45;
+  --action-press:#e8540f; /* --ink na nim 4,6:1 */
+  --alert:#9f1239;        /* WYŁĄCZNIE błędy (karmazyn — celowo daleko od pomarańczu akcji) — zawsze z ikoną „!” i tekstem */
+
+  /* „niebo” — gradient Stripe Press uproszczony do 2 przystanków i rozjaśniony w 60% ku papierowi.
+     Źródło: #e7d4e5 → #cad9e5 (pierwsze dwa przystanki zmierzone na press.stripe.com/the-dream-machine). */
+  --sky:linear-gradient(180deg,#efe7ec 0%,#e3e9ec 100%); /* domyślne tło KAŻDEJ strony */
+  --sky-line:linear-gradient(90deg,#e7d4e5,#cad9e5);
+
+  /* odstępy — skala 4/8 z dużymi krokami dla sekcji; strona oddycha, dane zostają zwarte w ramkach */
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;--s7:48px;--s8:64px;--s9:96px;
+  --gutter:48px;          /* margines strony (mobile: 16px) */
+
+  /* kształt: wszystko prostokątne. Tokeny zostają dla zgodności, ale mają 0. */
+  --r-data:0;--r-chip:0;--r-card:0;--r-panel:0;--r-pill:0;
+
+  /* kroje */
+  --f-sans:"Nunito Sans",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --f-mono:"DM Mono",ui-monospace,Menlo,monospace;
+  --f-display:var(--f-mono); /* tytuły: ten sam DM Mono, ale 500, duży, ciasno (−0.03em), pełna czerń */
+  --f-serif:var(--f-display); /* stara nazwa — alias dla zgodności */
+  --f-code:"Departure Mono","DM Mono",ui-monospace,monospace; /* etykiety 11 px: nagłówki kolumn, NR, statusy, chipy, FIG., klucze kv/spec */
+  --f-dot:Doto,"DM Mono",ui-monospace,monospace;
+
+  background-color:var(--paper);background-image:var(--sky);color:var(--ink);font:400 14px/1.45 var(--f-sans);
+  --rule-on-sky:rgba(28,28,28,.16);
+  -webkit-font-smoothing:antialiased;
+}
+.ins [hidden]{display:none!important}
+.ins a{color:var(--ink)}
+.ins *,.ins *::before,.ins *::after{box-sizing:border-box}
+
+/* ---------- typografia (role, nie rozmiary dowolne) ---------- */
+.ins .t-label{font:400 11px/1.3 var(--f-code);letter-spacing:1px;text-transform:uppercase;color:var(--mute)}
+.ins .t-meta{font:400 14px/1.4 var(--f-sans);color:var(--mute)}
+.ins .t-body{font:400 16px/1.6 var(--f-sans);max-width:68ch}
+.ins .t-data{font:400 14px/1.4 var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ins .t-name{font:650 18px/1.25 var(--f-sans);letter-spacing:-.005em}
+.ins .t-sec{font:500 28px/1.15 var(--f-display);letter-spacing:-.03em;color:var(--ink);margin:var(--s8) 0 var(--s5)}
+.ins .t-h1{font:500 52px/1.05 var(--f-display);letter-spacing:-.04em;color:var(--ink);margin:var(--s3) 0 var(--s4)}
+.ins .t-dot{font:700 48px/1 var(--f-dot)}
+@media (max-width:760px){.ins{--gutter:16px}.ins .t-h1{font-size:32px;letter-spacing:-.035em}.ins .t-sec{font-size:22px}.ins .t-dot{font-size:40px}.ins .t-sec{margin:var(--s7) 0 var(--s4)}}
+
+/* ---------- ramka (podstawowy pojemnik systemu) ----------
+   .frame — obrys 1 px, wnętrze --surface, kąty proste. .cap — nagłówek ramki: etykieta mono, linia pod spodem. */
+.ins .frame,.ins .side,.ins .panel,.ins .fig,.ins .empty{background:var(--surface);border:1px solid var(--frame);border-radius:0}
+.ins .cap{display:flex;justify-content:space-between;gap:12px;align-items:center;font:400 11px/1.3 var(--f-code);letter-spacing:1px;text-transform:uppercase;color:var(--mute);padding:var(--s3) var(--s5);border-bottom:1px solid var(--frame)}
+.ins .side>.cap,.ins .panel>.cap{margin:calc(-1*var(--s6)) calc(-1*var(--s6)) var(--s5)}
+.ins .tag{display:inline-block;font:400 11px/1 var(--f-code);letter-spacing:1px;text-transform:uppercase;color:var(--mute);border:1px solid var(--frame);padding:5px 8px;white-space:nowrap}
+
+/* ---------- pulpit (punkt kontrastu nr 1) ---------- */
+.ins .console{position:relative;background:var(--console);color:var(--console-ink);padding:var(--s6) var(--gutter) var(--s7)}
+.ins .c-head{display:flex;justify-content:space-between;gap:16px;font:400 11px var(--f-code);letter-spacing:1px;text-transform:uppercase;color:var(--console-mute)}
+.ins .c-live{color:var(--signal)}
+.ins .c-title{font:500 34px/1.15 var(--f-display);letter-spacing:-.035em;color:#fff;margin:var(--s4) 0 var(--s6);max-width:44ch}
+.ins .c-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));border:1px solid var(--console-line)}
+.ins .c-stat{padding:var(--s5);border-right:1px solid var(--console-line)}
+.ins .c-stat:last-child{border-right:0}
+.ins .c-stat b{display:block;font:700 48px/1 var(--f-dot);color:var(--console-ink);margin-bottom:var(--s3)}
+.ins .c-stat b.sig{color:var(--signal)}
+.ins .c-stat small{font:400 11px var(--f-code);letter-spacing:1px;text-transform:uppercase;color:var(--console-mute)}
+/* „horyzont”: cienka linia gradientu pod pulpitem */
+.ins .console::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--sky-line)}
+@media (max-width:760px){.ins .console{padding:var(--s5) var(--gutter) var(--s6)}.ins .c-title{font-size:23px;margin-bottom:var(--s5)}.ins .c-stat{padding:var(--s4)}.ins .c-stats{grid-template-columns:1fr 1fr}.ins .c-stat b{font-size:40px}.ins .c-stat:nth-child(2){border-right:0}.ins .c-stat:nth-child(n+3){display:none}}
+
+/* ---------- akcje: prostokąt z komórką strzałki (wzór: lista zakupu Stripe Press) ---------- */
+.ins .cta,.ins .cta2{display:inline-flex;align-items:stretch;justify-content:space-between;font:500 14px/46px var(--f-sans);letter-spacing:-.01em;min-height:48px;padding:0 0 0 var(--s5);border:1px solid var(--ink);border-radius:0;cursor:pointer;text-align:left;text-decoration:none;white-space:nowrap}
+.ins .cta::after,.ins .cta2::after{content:"→";display:block;width:48px;margin-left:var(--s5);text-align:center;border-left:1px solid var(--ink)}
+.ins .cta{background:var(--action);color:var(--ink)}
+.ins .cta2{background:var(--surface);color:var(--ink)}
+.ins .cta.ext::after,.ins .cta2.ext::after{content:"↗"}
+.ins .cta2.on::after{content:"✓"}
+.ins .tx{font:500 14px var(--f-sans);color:var(--ink);text-decoration:underline;text-underline-offset:3px;background:none;border:0;padding:0;cursor:pointer}
+.ins .cta.wide,.ins .cta2.wide{display:flex;width:100%}
+.ins .cta.wide+.cta2.wide,.ins .cta2.wide+.cta2.wide{margin-top:-1px}  /* przyklejone jak wiersze tabeli */
+.ins .cta:hover{background:var(--action-hover)}.ins .cta:active{background:var(--action-press)}.ins .cta2:hover{background:#fff}
+.ins .cta:disabled{background:var(--chip);color:var(--mute);border-color:var(--frame);cursor:not-allowed}
+.ins .cta:disabled::after{border-left-color:var(--frame)}
+/* fokus: zawsze widoczny; na ciemnym tle sygnałowy */
+.ins :focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.ins .console :focus-visible,.ins .row.sl :focus-visible{outline-color:var(--signal)}
+
+/* ---------- statusy i oznaczenia: prostokąty z obrysem ---------- */
+.ins .badge{display:inline-block;font:400 11px/1 var(--f-code);letter-spacing:1px;text-transform:uppercase;padding:5px 7px;border:1px solid var(--frame);background:transparent;color:var(--ink);white-space:nowrap}
+.ins .badge.ok{background:var(--signal-tint);color:var(--signal-ink);border-color:var(--signal-ink)}  /* dostępny od zaraz */
+.ins .badge.warn{border-color:var(--ink)}                                                          /* w toku */
+.ins .badge.off{color:var(--mute);border-color:var(--rule)}                                         /* niedostępny, zamknięty */
+.ins .seg{font:400 11px/1 var(--f-code);letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
+.ins .chip{display:inline-block;font:400 11px/1 var(--f-code);letter-spacing:1px;text-transform:uppercase;color:var(--ink);background:transparent;border:1px solid var(--frame);padding:5px 8px;white-space:nowrap}
+.ins .chips{display:flex;flex-wrap:wrap;gap:var(--s2)}
+.ins .nr{font:400 11px var(--f-code);letter-spacing:1px;color:var(--mute)}
+
+/* ---------- filtry: komórki sklejone w jeden pasek ---------- */
+.ins .filters{display:flex;flex-wrap:wrap;gap:var(--s3) 0;align-items:stretch;padding:var(--s6) var(--gutter)}
+.ins .fpill,.ins .choice label{position:relative;font:400 14px/1 var(--f-sans);background:var(--surface);color:var(--ink);border:1px solid var(--frame);border-radius:0;padding:14px 20px;white-space:nowrap;cursor:pointer;text-transform:none;letter-spacing:0}
+.ins .fpill+.fpill,.ins .choice label+label{margin-left:-1px}
+.ins .fpill[aria-pressed="true"],.ins .fpill.on,.ins .choice label:has(input:checked){background:var(--ink);color:#fff;border-color:var(--ink);z-index:1}
+.ins .fpill:hover,.ins .choice label:hover{background:#fff}
+.ins .fpill[aria-pressed="true"]:hover,.ins .choice label:has(input:checked):hover{background:var(--ink)}
+.ins .fsearch{flex:1 1 260px;min-width:0;display:flex;align-items:center;gap:12px;border:1px solid var(--frame);background:var(--surface);border-radius:0;padding:0 var(--s4);margin-left:var(--s4)}
+.ins .fsearch input{flex:1;min-width:0;border:0;background:transparent;font:400 14px var(--f-sans);color:var(--ink);padding:13px 0;outline:0}
+.ins .fsearch:focus-within{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.ins kbd{font:400 11px var(--f-code);border:1px solid var(--frame);padding:1px 5px;color:var(--mute)}
+.ins .count{margin-left:auto;align-self:center;font:400 14px var(--f-mono);color:var(--mute);padding-left:16px}
+@media (max-width:760px){.ins .filters{padding:var(--s4) var(--gutter);flex-wrap:nowrap;overflow-x:auto}.ins .filters .choice{flex-wrap:nowrap}.ins .filters>*{flex-shrink:0}.ins .fsearch{flex-basis:220px;min-width:220px}.ins .count{display:none}}
+
+/* wybór jednej opcji (segment, tryb, stan) — te same komórki co filtry; natywne radio ukryte wizualnie */
+.ins .choice{display:flex;flex-wrap:wrap;border:0;padding:0;margin:0}
+.ins .choice input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.ins .choice label:has(input:focus-visible){outline:2px solid var(--ink);outline-offset:2px}
+
+/* ---------- lista: tabela w ramce ----------
+   Dzieci wiersza: .chk .nr .who .seg .rate .stat .upd .go (dowolne można pominąć i nadpisać --cols / --areas). */
+.ins .list{padding:0 var(--gutter)}
+.ins .thead,.ins .row{display:grid;gap:var(--s5);align-items:center;
+  grid-template-columns:var(--cols,18px 44px minmax(240px,1fr) 90px 130px 140px 110px 16px);
+  grid-template-areas:var(--areas,"chk nr who seg rate stat upd go")}
+.ins .thead{padding:var(--s3) var(--s5);font:400 11px var(--f-code);letter-spacing:1px;text-transform:uppercase;color:var(--mute);border:1px solid var(--frame);background:var(--paper)}
+.ins .row{background:var(--surface);padding:var(--s5);min-height:80px;border:1px solid var(--frame);border-top:0;color:inherit;text-decoration:none;position:relative}
+.ins .row+.row{border-top:0}
+.ins .row::before{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:var(--rule)}  /* linia wewnętrzna */
+.ins .row:last-of-type::before{display:none}
+.ins .list>.row:first-child{border-top:1px solid var(--frame)}
+.ins .row:hover{background:#fff}
+.ins .row .chk{grid-area:chk}.ins .row .nr{grid-area:nr}.ins .row .who{grid-area:who}.ins .row .seg{grid-area:seg}
+.ins .row .rate{grid-area:rate}.ins .row .stat{grid-area:stat}.ins .row .upd{grid-area:upd;color:var(--mute)}.ins .row .go{grid-area:go;color:var(--mute);font-size:16px}
+.ins .row .go{font-family:var(--f-mono)}
+.ins .row .who{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ins .row .who .t-meta{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ins .row .who a{color:inherit;text-decoration:none}.ins .row .who a:hover{text-decoration:underline}
+.ins .chk{width:16px;height:16px;margin:0;accent-color:var(--signal)}
+/* wiersz wybrany / na shortliście (punkt kontrastu nr 2) */
+.ins .row.sl{background:var(--console);color:var(--console-ink)}
+.ins .row.sl::before{background:var(--console-line)}
+.ins .row.sl .t-name{color:#fff}
+.ins .row.sl .t-meta,.ins .row.sl .nr,.ins .row.sl .t-label,.ins .row.sl .go,.ins .row.sl .upd{color:var(--console-mute)}
+.ins .row.sl .badge,.ins .row.sl .chip{color:var(--console-ink);border-color:var(--console-mute);background:transparent}
+.ins .row.sl .badge.ok{background:var(--signal-deep);color:var(--signal);border-color:var(--signal)}
+.ins .row.sl .badge.off{color:var(--console-mute);border-color:var(--console-line)}
+@media (max-width:760px){
+  .ins .list{padding:0 var(--gutter)}.ins .thead{display:none}
+  .ins .list>.row:nth-child(2){border-top:1px solid var(--frame)}
+  .ins .row{grid-template-columns:auto 1fr auto;grid-template-areas:var(--areas-m,"chk seg nr" "who who who" "rate rate stat");gap:var(--s2) var(--s3);padding:var(--s5) var(--s4)}
+  .ins .row .upd,.ins .row .go{display:none}
+  .ins .row .who .t-meta{white-space:normal}
+  .ins .row .rate{margin-top:var(--s2)}
+  .ins .row .stat,.ins .row .save{justify-self:end}
+}
+
+/* tryb kompaktowy listy: więcej osób na ekranie, bez linii meta */
+.ins .list.compact .row{min-height:52px;padding:var(--s3) var(--s5)}
+.ins .list.compact .row .who .t-meta{display:none}
+
+/* powód wyróżnienia: kolor nigdy nie jest jedynym nośnikiem znaczenia — wiersz .sl mówi tekstem, dlaczego jest ciemny */
+.ins .row .why{margin-top:var(--s2);color:var(--ink)}
+.ins .row.sl .why{color:var(--console-ink)}
+/* podpisy liczb w kartach mobilnych: <span class="t-data" data-label="Nowe:">+12</span> */
+@media (max-width:760px){.ins .row [data-label]::before{content:attr(data-label) " ";font:400 11px var(--f-code);letter-spacing:1px;text-transform:uppercase;color:var(--mute)}
+  .ins .row.sl [data-label]::before{color:var(--console-mute)}}
+
+/* nagłówek sekcji z akcją (np. „Ogłoszenia” + „Dodaj ogłoszenie”) */
+.ins .sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s4) var(--s5);flex-wrap:wrap;margin:var(--s8) 0 var(--s5)}
+.ins .sec-head .t-sec{margin:0}
+@media (max-width:760px){.ins .sec-head{margin-top:var(--s7)}.ins .sec-head .cta{width:100%}}
+
+/* ---------- pasek akcji zbiorczych (punkt kontrastu nr 3 pojawia się tu dopiero po zaznaczeniu) ---------- */
+.ins .actbar{position:sticky;bottom:0;display:flex;gap:20px;align-items:center;justify-content:flex-end;background:var(--surface);border-top:1px solid var(--frame);padding:var(--s4) var(--gutter);margin-top:var(--s7)}
+.ins .actbar .t-label{margin-right:auto;color:var(--ink)}
+@media (max-width:760px){.ins .actbar{padding:var(--s3) var(--gutter);gap:var(--s3)}.ins .actbar .tx{display:none}}
+
+/* ---------- szczegół (profil, ogłoszenie) ---------- */
+.ins .detail{display:grid;grid-template-columns:minmax(0,1fr) 340px;grid-template-areas:"head side" "body side";gap:0 var(--s8);padding:var(--s8) var(--gutter) var(--s9);align-items:start;max-width:1280px;margin:0 auto}
+.ins .d-head{grid-area:head}.ins .d-body{grid-area:body;min-width:0}.ins .detail>.side{grid-area:side}
+.ins .back{display:inline-block;font:500 14px var(--f-sans);color:var(--mute);text-decoration:none;margin-bottom:var(--s7)}
+.ins .lead{font-size:19px;line-height:1.5;margin:0 0 var(--s5);max-width:56ch}
+.ins .side{padding:var(--s6);position:sticky;top:var(--s6)}
+.ins .panel{padding:var(--s6)}
+.ins .kv{display:grid;grid-template-columns:auto 1fr;margin:0 0 var(--s5)}
+.ins .kv dt,.ins .kv dd{margin:0;padding:var(--s4) 0;border-bottom:1px solid var(--rule);font-size:14px}
+.ins .kv dt{font:400 11px/1.3 var(--f-code);letter-spacing:1px;text-transform:uppercase;color:var(--mute);padding-top:19px}
+.ins .kv dd{text-align:right;font-weight:500}
+.ins .spec{display:grid;grid-template-columns:200px 1fr;margin:0 0 var(--s5);border-top:1px solid var(--frame);border-bottom:1px solid var(--frame)}
+.ins .spec dt,.ins .spec dd{margin:0;padding:var(--s4) 0;border-bottom:1px solid var(--rule)}
+.ins .spec dt:last-of-type,.ins .spec dd:last-of-type{border-bottom:0}
+.ins .spec dt{font:400 11px var(--f-code);letter-spacing:1px;text-transform:uppercase;color:var(--mute);padding-top:19px}
+.ins .fig{margin:0 0 var(--s5);padding:var(--s6)}
+.ins .fig figcaption{font-size:14px;margin-top:var(--s5)}
+.ins .fig figcaption .t-label:first-child{display:inline-block;border:1px solid var(--frame);padding:5px 8px;margin-bottom:6px}
+@media (max-width:860px){.ins .detail{grid-template-columns:1fr;grid-template-areas:"head" "side" "body";padding:var(--s6) var(--gutter) var(--s7);gap:var(--s5)}.ins .side{padding:var(--s5)}.ins .side{position:static}.ins .spec{grid-template-columns:1fr}.ins .spec dt{padding-bottom:0;border-bottom:0}}
+
+/* ---------- „niebo”: gradient jest domyślnym tłem każdej strony (ustawiony na .ins) ----------
+   Ramki (.side, .panel, .fig, lista, filtry) są nieprzezroczyste, więc dane leżą na --surface, a gradient widać w odstępach.
+   Klasa .sky zostaje jako alias zgodności (nic nie zmienia). */
+.ins .d-body .spec dt,.ins .d-body .spec dd,.ins .d-body .steps-list li{border-color:var(--rule-on-sky)}
+.ins .topbar{background:rgba(252,252,252,.75)}
+
+/* ---------- formularze (ekstrapolacja — nie było ich w badanych źródłach) ---------- */
+.ins .field{display:flex;flex-direction:column;gap:var(--s2);margin-bottom:var(--s5)}
+.ins .field>label{font:400 11px var(--f-code);letter-spacing:1px;text-transform:uppercase;color:var(--mute)}
+.ins .field input,.ins .field select,.ins .field textarea{font:400 16px var(--f-sans);color:var(--ink);background:var(--surface);border:1px solid var(--frame);border-radius:0;padding:12px 14px}
+.ins .field input:focus,.ins .field select:focus,.ins .field textarea:focus{outline:0;border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.ins .field .hint{font-size:13px;color:var(--mute)}
+.ins .field.err input,.ins .field.err select,.ins .field.err textarea{border-color:var(--alert);box-shadow:0 0 0 1px var(--alert)}
+.ins .field.err .hint{color:var(--alert)}
+.ins .field.err .hint::before,.ins .note-err::before{content:"!";display:inline-grid;place-items:center;width:16px;height:16px;margin-right:6px;background:var(--alert);color:#fff;font:600 11px var(--f-sans);vertical-align:1px}
+
+/* ---------- nawigacja globalna (ekstrapolacja) — cicha, nie jest punktem kontrastu ---------- */
+.ins .topbar{display:flex;align-items:stretch;gap:0;border-bottom:1px solid var(--frame);padding:0 var(--gutter);height:64px}
+.ins .wordmark{display:flex;align-items:center;font:500 13px var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink);text-decoration:none;white-space:nowrap;padding-right:var(--s6);margin-right:var(--s2);border-right:1px solid var(--frame)}
+.ins .wordmark b{font-weight:500;color:var(--mute)}
+.ins .nav{display:flex;gap:0;list-style:none;margin:0;padding:0}
+.ins .nav li{display:flex}
+.ins .nav a{display:flex;align-items:center;white-space:nowrap;font:500 14px var(--f-sans);color:var(--mute);text-decoration:none;padding:0 var(--s5);border-bottom:2px solid transparent;margin-bottom:-1px}
+.ins .nav a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--ink)}
+.ins .acct{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:14px;white-space:nowrap;padding-left:var(--s5);border-left:1px solid var(--frame)}
+@media (max-width:760px){.ins .topbar{padding:0 0 0 16px;overflow-x:auto}.ins .nav a{padding:0 12px}.ins .acct{padding:0 16px}.ins .acct span{display:none}}
+
+/* ---------- logo firmy: małe, kwadrat z obrysem i inicjałem; nigdy nie niesie kontrastu ---------- */
+.ins .logo{display:inline-grid;place-items:center;width:32px;height:32px;border:1px solid var(--frame);background:transparent;color:var(--ink);font:500 13px var(--f-mono);flex:none}
+.ins .row.sl .logo{border-color:var(--console-mute);color:var(--console-ink)}
+
+/* ---------- zapisz (gwiazdka) — przełącza wiersz w .sl ---------- */
+.ins .save{width:36px;height:36px;border:1px solid var(--frame);border-radius:0;background:transparent;color:var(--mute);font-size:16px;cursor:pointer}
+.ins .save[aria-pressed="true"]{border-color:var(--ink);color:var(--ink)}
+.ins .row.sl .save{border-color:var(--console-mute);color:var(--console-mute)}
+.ins .row.sl .save[aria-pressed="true"]{color:#fff;border-color:#fff}
+
+/* ---------- kroki procesu (lista numerowana mono) ---------- */
+.ins .steps-list{list-style:none;margin:0 0 var(--s5);padding:0;border-top:1px solid var(--frame);border-bottom:1px solid var(--frame)}
+.ins .steps-list li{display:grid;grid-template-columns:48px 1fr auto;gap:var(--s4);padding:var(--s4) 0;border-bottom:1px solid var(--rule);align-items:baseline}
+.ins .steps-list li:last-child{border-bottom:0}
+.ins .steps-list .n{font:400 11px var(--f-code);letter-spacing:1px;color:var(--mute)}
+.ins .steps-list .t-data{color:var(--mute)}
+
+/* ---------- stany puste i komunikaty ---------- */
+.ins .empty{border-style:dashed;padding:var(--s7);text-align:left}
+.ins .empty .t-label{display:block;margin-bottom:8px}
+.ins .note-err{border:1px solid var(--alert);border-left-width:4px;background:var(--surface);padding:12px 16px;font-size:14px}
+
+/* przełącznik (zapisz, shortlista): komórka po prawej pokazuje stan zamiast strzałki */
+.ins .cta2[aria-pressed="false"]::after{content:"+"}
+.ins .cta2[aria-pressed="true"]::after{content:"✓"}

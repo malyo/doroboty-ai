@@ -7,3 +7,6 @@ artifacts
 
 # Preserve the versioned reference byte-for-byte; checked by its own scripts.
 docs/design-system/agent-kit/
+
+# Project skill sources stay byte-identical to what the user supplied.
+.claude/skills/

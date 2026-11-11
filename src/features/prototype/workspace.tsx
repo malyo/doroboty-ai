@@ -12,6 +12,7 @@ import { ApplicationOfferPreview } from "@/features/jobs/application-offer-previ
 import { usePrototype } from "./store";
 import { currentPerson, publishedJobs, stageLabels, MIN_APPLICATION_ANSWER_LENGTH } from "./model";
 import { PageTitle, Empty, NotFound, Notice } from "./shell";
+import { plural } from "@/lib/plural";
 import { CvAttachment } from "./cv-attachment";
 import { MatchScore } from "./match-score";
 import { RecruitingApplication } from "./recruiting-application";
@@ -101,32 +102,43 @@ export function WorkspaceHome() {
   const applications = state.applications.filter((a) =>
     candidate ? a.candidateId === person.id : a.companyId === person.companyId,
   );
+  const inProcess = applications.filter(
+    (x) => !["rejected", "withdrawn", "hired"].includes(x.stage),
+  ).length;
   return (
     <>
-      <PageTitle>Witaj, {person.name.split(" ")[0]}</PageTitle>
-      <div className="grid gap-5 sm:grid-cols-3">
-        {[
-          ["Aplikacje", applications.length],
-          [
-            candidate ? "Zapisane oferty" : "Twoje oferty",
-            candidate
-              ? state.saved.filter((x) => x.candidateId === person.id).length
-              : state.jobs.filter((x) => x.companyId === person.companyId).length,
-          ],
-          [
-            "W trakcie procesu",
-            applications.filter((x) => !["rejected", "withdrawn", "hired"].includes(x.stage))
-              .length,
-          ],
-        ].map(([label, value]) => (
-          <div className="prototype-panel" key={label}>
-            <p className="text-muted-foreground">{label}</p>
-            <strong className="mt-3 block text-3xl">{value}</strong>
-          </div>
-        ))}
-      </div>
+      <header className="console workspace-console">
+        <div className="c-head">
+          <span>DoRoboty / {candidate ? "Kandydat" : "Pracodawca"} / Przegląd</span>
+          <span>{person.name}</span>
+        </div>
+        <h1 className="c-title">
+          Witaj, {person.name.split(" ")[0]}. {inProcess}{" "}
+          {plural(inProcess, "aplikacja jest", "aplikacje są", "aplikacji jest")} w trakcie procesu.
+        </h1>
+        <div className="c-stats">
+          {[
+            ["Aplikacje", applications.length],
+            [
+              candidate ? "Zapisane oferty" : "Twoje oferty",
+              candidate
+                ? state.saved.filter((x) => x.candidateId === person.id).length
+                : state.jobs.filter((x) => x.companyId === person.companyId).length,
+            ],
+            ["W trakcie procesu", inProcess],
+          ].map(([label, value]) => (
+            <div className="c-stat" key={label}>
+              <b>{String(value).padStart(2, "0")}</b>
+              <small>{label}</small>
+            </div>
+          ))}
+        </div>
+      </header>
       <div className="mt-8 flex flex-wrap gap-3">
-        <Link className={buttonVariants()} to={candidate ? "/oferty" : "/app/kandydaci"}>
+        <Link
+          className={buttonVariants({ variant: "action" })}
+          to={candidate ? "/oferty" : "/app/kandydaci"}
+        >
           {candidate ? "Przeglądaj oferty" : "Przejrzyj kandydatów"}
         </Link>
         <Link
@@ -193,7 +205,9 @@ export function ProfilePage({ preview = false }: { preview?: boolean }) {
           <Field label="O mnie">
             <Textarea name="bio" maxLength={12000} defaultValue={person.bio} />
           </Field>
-          <Button type="submit">Zapisz profil</Button>
+          <Button type="submit" variant="action">
+            Zapisz profil
+          </Button>
           {message && <p role="status">{message}</p>}
         </form>
       )}
@@ -374,6 +388,7 @@ export function ApplyPage() {
             )}
             <div className="application-actions">
               <Button
+                variant="action"
                 ref={sendButton}
                 type="submit"
                 disabled={submitted}
@@ -410,6 +425,21 @@ export function ApplyPage() {
     </section>
   );
 }
+/** Instrument C05 columns for application lists (candidate and employer). */
+const applicationListColumns = {
+  "--cols": "44px minmax(240px,1fr) 200px 150px 16px",
+  "--areas": '"nr who stat score go"',
+  "--areas-m": '"nr stat stat" "who who who" "score score score"',
+} as React.CSSProperties;
+
+/** Stage badges carry no colour: in-progress stages get an ink frame, closed ones are muted. */
+function stageBadgeClass(stage: string) {
+  if (["rejected", "withdrawn"].includes(stage)) return "badge off";
+  if (["interview_invited", "first_conversation_held", "continued"].includes(stage))
+    return "badge warn";
+  return "badge";
+}
+
 export function ApplicationsPage({ employer = false }: { employer?: boolean }) {
   const { state } = usePrototype();
   const person = currentPerson(state)!;
@@ -433,32 +463,44 @@ export function ApplicationsPage({ employer = false }: { employer?: boolean }) {
       <Field label={employer ? "Szukaj kandydata lub oferty" : "Szukaj oferty"}>
         <Input value={query} onChange={(e) => setQuery(e.target.value)} />
       </Field>
-      <div className="mt-6 space-y-4">
+      <div className="list record-list" style={applicationListColumns}>
+        <div className="thead" aria-hidden="true">
+          <span>Nr</span>
+          <span>{employer ? "Kandydat" : "Oferta"}</span>
+          <span>Etap</span>
+          <span>Dopasowanie</span>
+          <span />
+        </div>
         {applications.length ? (
-          applications.map((a) => (
-            <article className="prototype-panel" key={a.id}>
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                  <Link
-                    className="text-xl font-semibold text-[var(--gui-link)]"
-                    to={`${employer ? "/app/kandydaci" : "/app/aplikacje"}/${a.id}`}
-                  >
+          applications.map((a, index) => (
+            <article className="row" key={a.id}>
+              <span className="nr">{String(index + 1).padStart(4, "0")}</span>
+              <div className="who">
+                <h2 className="t-name">
+                  <Link to={`${employer ? "/app/kandydaci" : "/app/aplikacje"}/${a.id}`}>
                     {employer ? a.candidateName : a.jobTitle}
                   </Link>
-                  <p className="my-3 text-muted-foreground">
-                    {employer
-                      ? a.jobTitle
-                      : state.companies.find((x) => x.id === a.companyId)?.name}
-                  </p>
-                  <p>{stageLabels[a.stage]}</p>
-                </div>
-                <MatchScore score={a.score} />
+                </h2>
+                <span className="t-meta">
+                  {employer ? a.jobTitle : state.companies.find((x) => x.id === a.companyId)?.name}
+                </span>
+                {employer && <span className="t-meta record-summary">{a.summary}</span>}
               </div>
-              {employer && <p className="mt-4 text-muted-foreground">{a.summary}</p>}
+              <span className="stat">
+                <span className={stageBadgeClass(a.stage)}>{stageLabels[a.stage]}</span>
+              </span>
+              <span className="score">
+                <MatchScore score={a.score} />
+              </span>
+              <span className="go" aria-hidden="true">
+                ›
+              </span>
             </article>
           ))
         ) : (
-          <Empty>Brak aplikacji spełniających kryteria.</Empty>
+          <div className="row">
+            <p className="t-meta empty-row">Brak aplikacji spełniających kryteria.</p>
+          </div>
         )}
       </div>
     </>

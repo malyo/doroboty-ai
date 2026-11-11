@@ -1,18 +1,23 @@
-/* Poster People host adaptation. Reference kit remains immutable. */
+/* Instrument host token layer. Role values come from .claude/skills/doroboty-instrument-ui.
+   The Poster People reference kit in docs/design-system/agent-kit remains immutable history. */
 :root {
   color-scheme: light;
 
-  --theme-name: "Poster People";
+  --theme-name: "Instrument";
   --theme-icon-family: "Lucide";
   --theme-icon-style: "outlined";
   --icon-light-display: none;
   --icon-regular-display: inline;
   --icon-bold-display: none;
 
-  --gui-font-brand: "Geist Serif", Georgia, serif;
-  --gui-font-ui: Arial, Helvetica, system-ui, sans-serif;
-  --gui-font-editorial: "Geist Serif", Georgia, serif;
-  --gui-font-data: Arial, Helvetica, system-ui, sans-serif;
+  --gui-font-brand: "DM Mono", ui-monospace, Menlo, monospace;
+  --gui-font-ui:
+    "Nunito Sans Variable", "Nunito Sans", -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --gui-font-editorial: "DM Mono", ui-monospace, Menlo, monospace;
+  --gui-font-data: "DM Mono", ui-monospace, Menlo, monospace;
+  /* Departure Mono: only 11 px uppercase labels (column heads, NR, statuses, chips, keys). */
+  --gui-font-label: "Departure Mono", "DM Mono", ui-monospace, monospace;
+  --gui-font-counter: Doto, "DM Mono", ui-monospace, monospace;
   --font-ui: var(--gui-font-ui);
   --font-brand: var(--gui-font-brand);
   --font-editorial: var(--gui-font-editorial);
@@ -20,9 +25,9 @@
   --weight-ui-regular: 400;
   --weight-ui-medium: 500;
   --weight-ui-heavy: 600;
-  --weight-brand-regular: 400;
-  --weight-brand-medium: 400;
-  --weight-brand-heavy: 400;
+  --weight-brand-regular: 500;
+  --weight-brand-medium: 500;
+  --weight-brand-heavy: 500;
   --weight-editorial-regular: 400;
   --weight-editorial-medium: 500;
   --weight-editorial-heavy: 600;
@@ -35,13 +40,13 @@
   --font-code: var(--gui-font-data);
 
   --gui-space-zero: 0;
-  --gui-space-xxs: 5px;
-  --gui-space-xs: 10px;
-  --gui-space-s: 14px;
-  --gui-space-m: 19px;
-  --gui-space-l: 29px;
-  --gui-space-xl: 39px;
-  --gui-space-xxl: 58px;
+  --gui-space-xxs: 4px;
+  --gui-space-xs: 8px;
+  --gui-space-s: 12px;
+  --gui-space-m: 16px;
+  --gui-space-l: 24px;
+  --gui-space-xl: 32px;
+  --gui-space-xxl: 48px;
   --space-xs: var(--gui-space-xxs);
   --space-sm: var(--gui-space-xs);
   --space-md: var(--gui-space-m);
@@ -53,103 +58,129 @@
   --gui-leading-xxs: 15px;
   --gui-text-xs: 13px;
   --gui-leading-xs: 17px;
-  --gui-text-s: 15px;
-  --gui-leading-s: 21px;
-  --gui-text-m: 17px;
+  --gui-text-s: 14px;
+  --gui-leading-s: 20px;
+  --gui-text-m: 16px;
   --gui-leading-m: 26px;
-  --gui-text-l: 26px;
-  --gui-leading-l: 34px;
-  --gui-text-xl: 39px;
-  --gui-leading-xl: 43px;
+  --gui-text-l: 28px;
+  --gui-leading-l: 32px;
+  --gui-text-xl: 34px;
+  --gui-leading-xl: 39px;
   --gui-text-xxl: 52px;
-  --gui-leading-xxl: 56px;
-  --gui-tracking-xs: -0.02em;
-  --gui-tracking-s: -0.01em;
+  --gui-leading-xxl: 55px;
+  --gui-tracking-xs: -0.04em;
+  --gui-tracking-s: -0.03em;
   --gui-tracking-m: 0;
-  --gui-tracking-l: 0.01em;
-  --gui-tracking-xl: 0.02em;
+  --gui-tracking-l: 0;
+  --gui-tracking-xl: 1px;
 
   --gui-radius-zero: 0;
-  --gui-radius-xs: 5px;
-  --gui-radius-s: 18px;
-  --gui-radius-m: 24px;
-  --gui-radius-l: 24px;
-  --gui-radius-xl: 24px;
-  --gui-radius-full: 9999px;
+  --gui-radius-xs: 0;
+  --gui-radius-s: 0;
+  --gui-radius-m: 0;
+  --gui-radius-l: 0;
+  --gui-radius-xl: 0;
+  --gui-radius-full: 0;
   --radius: var(--gui-radius-s);
 
+  /* Instrument palette (see .claude/skills/doroboty-instrument-ui/references/visual-system.md).
+     Neutral steps keep their old names so existing consumers convert without per-file edits. */
   --gui-neutral-1: #ffffff;
   --gui-neutral-1-transparent: #ffffff33;
-  --gui-neutral-2: #ffffff;
-  --gui-neutral-2-transparent: #fbfbfb33;
-  --gui-neutral-3: #f4f4f0;
-  --gui-neutral-3-transparent: #f4f4f433;
-  --gui-neutral-4: #d8d5d1;
-  --gui-neutral-4-transparent: #e7e7e733;
-  --gui-neutral-5: #cdcdcd;
-  --gui-neutral-5-transparent: #cdcdcd33;
-  --gui-neutral-6: #a1a1a1;
-  --gui-neutral-6-transparent: #a1a1a133;
-  --gui-neutral-7: #7d7d7d;
-  --gui-neutral-7-transparent: #7d7d7d33;
-  --gui-neutral-8: #5e5a5c;
+  --gui-neutral-2: #fcfcfc; /* --surface: inside frames */
+  --gui-neutral-2-transparent: #fcfcfc33;
+  --gui-neutral-3: #f2f2f2; /* --paper */
+  --gui-neutral-3-transparent: #f2f2f233;
+  --gui-neutral-4: #d9d9d9; /* --rule: lines inside frames */
+  --gui-neutral-4-transparent: #d9d9d933;
+  --gui-neutral-5: #e3e3e3; /* --chip: neutral fill */
+  --gui-neutral-5-transparent: #e3e3e333;
+  --gui-neutral-6: #8a8a8a; /* --frame: outer frame, 3.4:1 */
+  --gui-neutral-6-transparent: #8a8a8a33;
+  --gui-neutral-7: #555555; /* --mute */
+  --gui-neutral-7-transparent: #55555533;
+  --gui-neutral-8: #555555;
   --gui-neutral-8-transparent: #55555533;
   --gui-neutral-9: #333333;
   --gui-neutral-9-transparent: #33333333;
-  --gui-neutral-10: #181818;
-  --gui-color-1: #ff90e8;
-  --gui-color-2: #181818;
-  --gui-color-2-transparent: #085e5533;
-  --gui-color-3: #ffe45b;
-  --gui-color-3-transparent: #ffed9b33;
-  --gui-color-4: #ffb5aa;
-  --gui-color-4-transparent: #ffb5aa33;
-  /* Noninteractive Match Score facts: red → orange → yellow → vivid green. */
-  --gui-match-red: #ff6b79;
-  --gui-match-orange: #ffb15c;
-  --gui-match-yellow: #ffe45b;
-  --gui-match-green: #00c853;
-  --gui-success: #00906c;
-  --gui-warning: #ffea00;
-  --gui-warning-transparent: #ffea0033;
-  --gui-error: #fc032d;
+  --gui-neutral-10: #1c1c1c; /* --ink */
+  /* Accent slots are neutralised: orange belongs only to the main action, green only to "available". */
+  --gui-color-1: #1c1c1c;
+  --gui-color-2: #1c1c1c;
+  --gui-color-2-transparent: #1c1c1c14;
+  --gui-color-3: #e3e3e3;
+  --gui-color-3-transparent: #e3e3e333;
+  --gui-color-4: #e3e3e3;
+  --gui-color-4-transparent: #e3e3e333;
+  /* Match Score facts are neutral data in Instrument: band is shown by text and frame weight. */
+  --gui-match-red: transparent;
+  --gui-match-orange: transparent;
+  --gui-match-yellow: transparent;
+  --gui-match-green: transparent;
+  --gui-success: #00503a; /* --signal-ink: "available" on light */
+  --gui-warning: #1c1c1c; /* warnings have no colour: ink outline */
+  --gui-warning-transparent: transparent;
+  --gui-error: #9f1239; /* --alert: errors only, always with "!" */
   --gui-neutral-10-transparent: #00000033;
-  --gui-backdrop: #18181899;
-  --gui-color-1-transparent: #ffe0f7;
-  --gui-success-transparent: #00906c33;
-  --gui-error-transparent: #fc032d33;
+  --gui-backdrop: #0b0e1299;
+  --gui-color-1-transparent: #e3e3e3;
+  --gui-success-transparent: #dcf3ea; /* --signal-tint */
+  --gui-error-transparent: #9f123914;
 
-  --gui-canvas: #f4f4f0;
+  /* Instrument roles (names from instrument.css), available outside .ins as well. */
+  --paper: #f2f2f2;
+  --surface: #fcfcfc;
+  --ink: #1c1c1c;
+  --mute: #555555;
+  --chip: #e3e3e3;
+  --frame: #8a8a8a;
+  --rule: #d9d9d9;
+  --console: #0b0e12;
+  --console-ink: #dedede;
+  --console-mute: #a3a4a5;
+  --console-line: #30353d;
+  --signal: #00d892;
+  --signal-ink: #00503a;
+  --signal-tint: #dcf3ea;
+  --signal-deep: #0e3b2c;
+  --action: #ff5a1f;
+  --action-hover: #ff7a45;
+  --action-press: #e8540f;
+  --alert: #9f1239;
+  --sky: linear-gradient(180deg, #efe7ec 0%, #e3e9ec 100%);
+  --sky-line: linear-gradient(90deg, #e7d4e5, #cad9e5);
+
+  --gui-canvas: #f2f2f2;
   --gui-surface: var(--gui-neutral-2);
   --gui-surface-muted: var(--gui-neutral-3);
   --gui-text: var(--gui-neutral-10);
-  --gui-text-muted: #5e5a5c;
+  --gui-text-muted: #555555;
   --gui-text-muted-accessible: var(--gui-neutral-8);
-  --gui-edge: #181818;
+  --gui-edge: #8a8a8a;
   --gui-accent: var(--gui-color-1);
-  --gui-accent-text: #181818;
-  /* Dark labels on pink actions. */
+  --gui-accent-text: #1c1c1c;
+  /* Dark labels on the orange action (5.5:1). */
   --gui-accent-text-accessible: var(--gui-neutral-10);
   --gui-danger: var(--gui-error);
-  --gui-focus: #181818;
+  --gui-focus: #1c1c1c;
   --gui-link: var(--gui-color-2);
-  --gui-control: #ffffff;
-  --gui-control-hover: var(--gui-neutral-4);
-  --gui-control-disabled: var(--gui-neutral-3);
+  --gui-control: #fcfcfc;
+  --gui-control-hover: #ffffff;
+  --gui-control-disabled: var(--gui-neutral-5);
   --gui-control-readonly: var(--gui-neutral-2);
 
   --gui-shadow-none: none;
   --gui-shadow-s: 0 2px 4px 0 #00000000;
-  --gui-shadow-m: inset 0 0 0 1px #181818;
+  --gui-shadow-m: inset 0 0 0 1px #8a8a8a;
   --gui-shadow-l: 0 16px 48px 0 #00000000;
-  /* Visible ink contours; no offset shadows. */
-  --gui-edge-shadow: inset 0 0 0 1px #181818;
+  /* 1 px frames, square corners, no offset shadows. */
+  --gui-edge-shadow: inset 0 0 0 1px #8a8a8a;
   --gui-divider-top-shadow: inset 0 1px var(--gui-edge);
   --gui-divider-bottom-shadow: inset 0 -1px var(--gui-edge);
   --gui-divider-inline-end-shadow: inset -1px 0 var(--gui-edge);
   --gui-accent-edge-shadow: none;
-  --gui-accent-bar-shadow: inset 4px 0 var(--gui-color-1);
-  --gui-control-shadow: inset 0 0 0 1px #181818;
+  --gui-accent-bar-shadow: inset 2px 0 var(--gui-neutral-10);
+  --gui-control-shadow: inset 0 0 0 1px #8a8a8a;
   --gui-control-hover-shadow: none;
   --gui-control-focus-shadow: none;
   --gui-control-invalid-shadow: none;
@@ -194,7 +225,7 @@
       0.9983,
       1
     );
-  --gui-scale-enter: 0.96;
+  --gui-scale-enter: 1;
   --gui-press-offset: 1px;
   --motion-duration: 400ms;
   --motion-easing: linear(
@@ -235,13 +266,13 @@
     0.9983,
     1
   );
-  --motion-popup-scale: 0.96;
+  --motion-popup-scale: 1;
   --motion-press-distance: 1px;
   --ease-out: linear(0, 0.38, 0.68, 0.85, 0.94, 0.98, 1.01, 1.01, 1);
   --ease-in: linear(0, 0.03, 0.09, 0.21, 0.4, 0.64, 0.84, 1);
   --ease-in-out: linear(0, 0.16, 0.43, 0.72, 0.9, 0.98, 1.01, 1);
   --dur-short: 160ms;
-  --icon-stroke-width: 2;
+  --icon-stroke-width: 1.5;
 
   /* shadcn semantic bridge */
   --background: var(--gui-canvas);
@@ -250,8 +281,8 @@
   --card-foreground: var(--gui-text);
   --popover: var(--gui-neutral-1);
   --popover-foreground: var(--gui-text);
-  --primary: #ff90e8;
-  --primary-foreground: #181818;
+  --primary: #ff5a1f;
+  --primary-foreground: #1c1c1c;
   --secondary: var(--gui-surface-muted);
   --secondary-foreground: var(--gui-text);
   --muted: var(--gui-surface-muted);

@@ -988,11 +988,13 @@ code {
   }
 }
 
+/* Instrument .panel: opaque surface, 1px outer frame, square corners. */
 .prototype-panel {
-  background: var(--card);
-  border-radius: var(--gui-radius-m);
-  box-shadow: var(--gui-edge-shadow);
-  padding: var(--gui-space-l);
+  background: var(--surface);
+  border-radius: 0;
+  border: 1px solid var(--frame);
+  box-shadow: none;
+  padding: var(--s6);
 }
 .prototype-form {
   display: grid;

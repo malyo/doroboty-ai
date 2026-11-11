@@ -1,21 +1,22 @@
-# GUI — DoRoboty.ai Poster People
+# GUI — DoRoboty.ai Instrument
 
-The required visual direction for new and changed screens is the accepted **Poster People** design system. The project instructions are [docs/design-system/README.md](docs/design-system/README.md). Read them before UI work; they define how the standalone reference is adapted to this React/TypeScript/Vite application. The previous theme reference tree and skill requirements have been removed.
+The required visual direction for new and changed screens is **Instrument**: a light, quiet work surface on a sky gradient where everything sits in 1px frames with square corners; contrast appears only in three places (the dark console with numbers, inverted selected rows, one orange action). The source of truth is the project skill [.claude/skills/doroboty-instrument-ui/SKILL.md](.claude/skills/doroboty-instrument-ui/SKILL.md) with its one-file summary [.claude/skills/doroboty-instrument-ui/design.md](.claude/skills/doroboty-instrument-ui/design.md).
 
-## Read and preview
+Poster People (docs/design-system/) is the previous direction. Its immutable kit stays in the repository as history and is still checked by `npm run design-system:check`; do not use it for new UI.
 
-1. [Project integration guide](docs/design-system/README.md): authority, React/Base UI mapping, routes/state, assets and completion criteria.
-2. [Host implementation rules](docs/design-system/IMPLEMENTATION.md), [React component catalog](docs/design-system/HOST-COMPONENTS.md), [record/CV APIs](docs/design-system/RECORDS.md), [acceptance checklist](docs/design-system/VERIFICATION.md) and [status/open findings](docs/design-system/STATUS.md): reusable owners, actual contracts, URL/focus rules, breakpoint values and regression scenarios.
-3. [Agent entry point](docs/design-system/agent-kit/design.md): visual hierarchy, composition, exact standalone imports and extension boundaries.
-4. [Component API](docs/design-system/agent-kit/components/API.md) plus relevant [human reference](docs/design-system/agent-kit/reference/components.md): anatomy, variants, states and evidence.
-5. `npm run design-system:dev`: local catalog, full listing and offer on port 8952. `npm run design-system:check` checks the immutable kit. No global skill or extra installation is required.
+## Read
+
+1. [design.md](.claude/skills/doroboty-instrument-ui/design.md): principles, tokens, type roles, page composition, class API (C01–C17) and the review checklist.
+2. [references/screen-recipes.md](.claude/skills/doroboty-instrument-ui/references/screen-recipes.md): the recipe for your screen type and where its contrast points go.
+3. [references/visual-system.md](.claude/skills/doroboty-instrument-ui/references/visual-system.md): token sources and contrast pairs.
+4. Working patterns: `.claude/skills/doroboty-instrument-ui/assets/candidate-list.html`, `candidate-profile.html`, `job-form.html`.
 
 ## Implement in this app
 
-- Preserve the requested scope, React/TypeScript/Vite, hash routes, Base UI's `render` composition, Zod/local data operations and current application workflows.
-- Use local Geist Serif Regular for headings, paper/white/ink/pink roles, source contours and radii, complete title wrapping and responsive listing/offer composition.
-- Adapt host tokens and existing primitives together. Do not paste the kit's global reset or vanilla controllers into React, substitute example data for product state, or create a parallel button/card library.
-- Keep docs/design-system/agent-kit unchanged as the reference; implement product UI in src/ and the host theme layer. Existing token names do not establish an alternative visual target.
-- Compare desktop/mobile evidence; test long content, missing salary/marks, keyboard focus, selection, dialogs and recovery. Run ./scripts/verify and report actual checks. The original kit report does not verify a new React screen.
-
-The running application has a host adaptation; current code still requires comparison with the source on each UI task. Follow the implementation map rather than creating parallel controls. Keep Search outside mobile filters, preserve copied section URLs under HashRouter, manage focus after chip removal, reuse outlined surfaces and compare full action type roles plus one contour. Record actual evidence and partial findings; preserve old audit artifacts in separate task-specific directories.
+- Instrument classes (`.console`, `.filters`, `.list`/`.row`, `.detail`/`.side`/`.kv`, `.badge`, `.chip`, `.seg`, `.empty`, `.t-*` roles) come from [src/app/instrument.css](src/app/instrument.css), enabled by `class="ins"` on `<body>`. Keep the class names; they are the public API.
+- Host mapping lives in [tokens.css](tokens.css) (`--gui-*`, `--pp-*` and shadcn bridge resolve to Instrument values) and [src/app/instrument-host.css](src/app/instrument-host.css) (Base UI buttons, inputs, labels, dialogs, shell).
+- Buttons: `Button` default is the light frame with an arrow cell (`.cta2`); `variant="action"` is the orange `.cta` and is used for the one main action of a screen only; `outline` for neutral controls; `link`/`destructive` render as underlined text.
+- Fonts are bundled locally (DM Mono, Nunito Sans, Doto via npm packages; Departure Mono in src/app/fonts). Never load a remote font.
+- Lists are framed tables (`JobList`/`JobCard` for offers); an inverted `.row.sl` always carries a `.why` reason and a legend above the list.
+- Keep the scope, React/TypeScript/Vite, hash routes, Base UI `render` composition, Zod/local data operations and workflows.
+- Check 1440 and 390 px: no horizontal page scroll, facts card above content on mobile, visible focus, one orange element per screen. Run ./scripts/verify and report actual checks.

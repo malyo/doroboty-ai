@@ -1,61 +1,300 @@
-@import "./marketplace-components.css";
-@import "./marketplace-listing.css";
-@import "./marketplace-offer.css";
+/* Public marketplace (listing, offer, company) in the Instrument direction.
+   Shared parts come from instrument.css (.console, .filters, .list, .row, .detail, .side, .kv, .chip);
+   this file only lays them out in the host's React compositions. */
 
-/* React/Base UI integration; retain reference geometry without importing its reset/controllers. */
+/* Page container shared by marketplace and application compositions. */
 .pp-container {
-  width: min(1280px, calc(100% - 80px));
+  width: min(1280px, calc(100% - 2 * var(--gutter, 48px)));
   margin-inline: auto;
 }
-.pp-intro-copy h1,
-.pp-job-title,
-.pp-offer-hero h1,
-.pp-results-title h2 {
-  font-family: var(--pp-font-heading);
-  font-weight: 400;
+.pp-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  flex-shrink: 0;
 }
-.pp-search-field {
-  width: auto;
+
+/* ---------- listing: filters bar under the console ---------- */
+.ins .job-filters-bar {
+  gap: var(--s3) var(--s4);
 }
-.pp-search-field .sr-only {
-  position: absolute;
-  left: auto;
+.ins .segment-choice {
+  flex-wrap: nowrap;
 }
-.pp-search-submit {
-  border: 1px solid var(--pp-ink);
-  border-radius: 18px;
-  background: var(--pp-action);
+.ins .pp-search-form {
+  display: flex;
+  flex: 1 1 520px;
+  min-width: 0;
+  align-items: stretch;
+}
+.ins .pp-search-form .fsearch {
+  margin-left: 0;
+}
+.ins .fselect {
+  display: flex;
+  border: 1px solid var(--frame);
+  border-left: 0;
+  background: var(--surface);
+}
+.ins .fselect select {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  font: 400 14px var(--f-sans);
+  color: var(--ink);
+  padding: 0 var(--s6) 0 var(--s4);
+  cursor: pointer;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--ink) 50%),
+    linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 50%,
+    calc(100% - 13px) 50%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+}
+.ins .fselect select:focus {
+  outline: 0;
+}
+.ins .fselect:focus-within {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 1px var(--ink);
+  z-index: 1;
+}
+.ins .pp-search-form .pp-search-submit {
+  margin-left: -1px;
+  min-height: 48px;
+}
+
+/* ---------- listing: filter column + results ---------- */
+.ins .pp-board-layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  align-items: start;
+  gap: var(--s6);
+  padding: 0 var(--gutter) var(--s8);
+}
+.ins .pp-filter-position {
+  position: sticky;
+  top: calc(64px + var(--s5));
+}
+.ins .pp-filter-panel {
+  padding: 0 var(--s5) var(--s3);
+}
+.ins .pp-filter-panel > .cap {
+  margin: 0 calc(-1 * var(--s5)) var(--s2);
+}
+.ins .pp-filter-heading h2 {
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  margin: 0;
+}
+.ins .pp-text-button {
+  font-size: 13px;
+}
+.ins .pp-filter-group {
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  margin: 0;
+  padding: var(--s4) 0;
+  display: grid;
+  gap: var(--s2);
+}
+.ins .pp-filter-group:last-child {
+  border-bottom: 0;
+}
+.ins .pp-filter-group legend {
+  float: left;
+  width: 100%;
+  margin-bottom: var(--s2);
+  font: 400 11px/1.3 var(--f-code);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+.ins .pp-filter-group label {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
   font-size: 14px;
-  font-weight: 600;
-  line-height: 1.5;
-  letter-spacing: normal;
-  box-shadow: none;
+  cursor: pointer;
+  min-height: 28px;
 }
-.pp-filter-position {
+.ins .pp-filter-group input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--ink);
+}
+.ins .pp-results-column {
   min-width: 0;
 }
-.pp-sort-label {
-  font-size: 12px;
-  color: var(--pp-muted);
+.ins .pp-results-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--s4);
+  flex-wrap: wrap;
+  margin-bottom: var(--s4);
 }
-.pp-view-link {
-  font-size: 12px;
-  padding: 8px;
-  border-radius: 10px;
+.ins .pp-results-title {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s3);
 }
-.pp-view-link[aria-current="page"] {
-  background: var(--pp-ink);
-  color: white;
+.ins .pp-results-title .t-sec {
+  margin: 0;
 }
-.pp-filter-button {
-  border: 1px solid var(--pp-ink);
-  border-radius: 18px;
-  background: white;
+.ins .pp-results-title .t-data {
+  color: var(--mute);
 }
+.ins .pp-results-controls {
+  display: flex;
+  align-items: stretch;
+}
+.ins .pp-sort-label {
+  align-self: center;
+  margin-right: var(--s4);
+}
+.ins .pp-view-link {
+  font: 400 14px/1 var(--f-sans);
+  border: 1px solid var(--frame);
+  background: var(--surface);
+  padding: 12px 18px;
+  text-decoration: none;
+}
+.ins .pp-view-link + .pp-view-link {
+  margin-left: -1px;
+}
+.ins .pp-view-link[aria-current="page"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}
+.ins .pp-active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s2) 0;
+  margin-bottom: var(--s4);
+}
+.ins .pp-active-filters .tx {
+  margin-left: var(--s4);
+}
+.ins .list-legend {
+  margin: 0 0 var(--s3);
+}
+
+/* ---------- list of offers (C05 with host columns) ---------- */
+.ins .job-list {
+  padding: 0;
+}
+.ins .job-list .row .job-logo {
+  grid-area: logo;
+}
+.ins .job-list .row .mode {
+  grid-area: mode;
+}
+.ins .job-list .row .save,
+.ins .job-list .row .go {
+  grid-area: save;
+}
+.ins .job-list .who h3 {
+  margin: 0;
+  font: 650 18px/1.25 var(--f-sans);
+  letter-spacing: -0.005em;
+  overflow-wrap: anywhere;
+}
+/* The title link covers the whole row; the company link and the star sit above it. */
+.ins .job-list .who h3 a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.ins .job-list .row .pp-job-company,
+.ins .job-list .row .save {
+  position: relative;
+  z-index: 1;
+}
+.ins .job-list .row .pp-job-company {
+  color: inherit;
+}
+.ins .job-list .row.sl .t-name a {
+  color: #fff;
+}
+.ins .salary-fact {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.ins .salary-fact .t-meta {
+  font-size: 13px;
+}
+.ins .row.sl .t-data {
+  color: var(--console-ink);
+}
+.ins .row.sl .salary-fact .t-meta {
+  color: var(--console-mute);
+}
+.ins .company-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 3px;
+}
+.ins .company-logo-large {
+  width: 56px;
+  height: 56px;
+  font-size: 18px;
+}
+
+/* ---------- pagination ---------- */
+.ins .pp-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--s4);
+  margin-top: var(--s5);
+}
+.ins .pp-page-summary {
+  font: 400 14px var(--f-mono);
+  color: var(--mute);
+  margin: 0;
+}
+.ins .pp-page-button {
+  font-family: var(--f-mono);
+}
+
+/* ---------- empty state ---------- */
+.ins .pp-empty-state h3 {
+  font: 650 18px/1.25 var(--f-sans);
+  margin: 0 0 var(--s2);
+  letter-spacing: 0;
+}
+.ins .pp-empty-state p {
+  margin: 0 0 var(--s4);
+}
+
+/* ---------- mobile filter dialog ---------- */
+.ins .pp-filter-button {
+  width: 100%;
+  justify-content: flex-start;
+}
+/* Full-screen sheet on mobile: framed heading, scrolling groups, sticky footer action. */
 .pp-filter-dialog[data-slot="dialog-content"] {
   inset: 0;
   transform: none;
   translate: none;
+  /* The production minifier folds transform/translate together, so also zero Tailwind's variables. */
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  animation: none;
   width: 100%;
   max-width: none;
   height: 100dvh;
@@ -66,238 +305,169 @@
   gap: 0;
   border: 0;
   overflow: hidden;
-  background: white;
+  background: var(--surface);
+  overscroll-behavior: contain;
 }
-.pp-filter-dialog .pp-dialog-heading {
+.pp-dialog-heading {
   flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--s4);
+  padding: var(--s4) var(--s4) var(--s4) var(--s5);
+  border-bottom: 1px solid var(--frame);
 }
-.pp-filter-dialog .pp-filter-scroll {
+.pp-filter-help {
+  padding: var(--s3) var(--s5);
+  font-size: 13px;
+  color: var(--mute);
+  border-bottom: 1px solid var(--rule);
+}
+.pp-filter-scroll {
   overflow-y: auto;
   flex: 1;
   min-height: 0;
 }
-.pp-filter-help {
-  padding: 12px 24px;
-  font-size: 12px;
-  line-height: 1.5;
-  color: var(--pp-muted);
+.ins .pp-filter-scroll .pp-filter-panel {
+  border: 0;
+  padding: 0 var(--s5);
+}
+.ins .pp-filter-scroll .pp-filter-panel > .cap {
+  display: none;
 }
 .pp-filter-dialog-footer {
   flex-shrink: 0;
+  padding: var(--s3) var(--s4) max(var(--s3), env(safe-area-inset-bottom));
+  border-top: 1px solid var(--frame);
+  background: var(--surface);
 }
 .pp-filter-dialog-footer > button {
   width: 100%;
 }
-.pp-job-card > [data-company-logo] {
-  margin: 25px 0 0 22px;
-  width: 43px;
-  height: 43px;
-  border: 1px solid var(--pp-ink);
-  border-radius: 18px;
-  background: var(--pp-paper);
-  font-size: 17px;
+
+/* ---------- offer and company detail (.detail) ---------- */
+.ins .pp-offer-breadcrumb {
+  margin-bottom: var(--s6);
 }
-.pp-job-title {
-  margin: 0;
+.ins .offer-company {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  margin: 0 0 var(--s5);
 }
-.pp-save-button {
-  box-shadow: none;
-  border: 0;
-}
-.pp-offer-identity > [data-company-logo] {
-  width: 60px;
-  height: 60px;
-  border: 1px solid var(--pp-ink);
-  border-radius: 18px;
-  background: var(--pp-fact);
-}
-.pp-offer-identity .pp-icon {
-  width: 15px;
-  height: 15px;
-}
-.pp-offer-eyebrow {
-  color: var(--pp-muted);
-  font-size: 12px;
-  margin-bottom: 12px;
-}
-.pp-offer-pay .pp-salary-description {
-  font-size: 12px;
-  margin-top: 10px;
-}
-.pp-offer-pay .pp-salary-tag {
-  font-size: 24px;
-  line-height: 1.45;
-  padding: 8px 13px;
-}
-.pp-offer-actions > a,
-.pp-offer-actions > button {
-  width: 100%;
-  min-height: 50px;
-  font-size: 14px;
+.ins .pp-offer-company-link {
   font-weight: 600;
-  line-height: 1.5;
-  letter-spacing: normal;
+}
+.ins .pp-offer-pay {
+  padding-bottom: var(--s4);
+  border-bottom: 1px solid var(--rule);
+}
+.ins .pp-offer-pay .t-label {
+  margin: 0 0 var(--s2);
+}
+.ins .pp-offer-pay .pp-salary-tag {
+  font: 400 24px/1.3 var(--f-mono);
+  letter-spacing: -0.02em;
+  white-space: normal;
+}
+.ins .pp-offer-actions {
   display: flex;
-  justify-content: center;
-  gap: 12px;
-  align-items: center;
+  flex-direction: column;
 }
-.pp-offer-section [data-job-description] h3 {
-  font-size: 27px;
-  font-family: var(--pp-font-heading);
-  font-weight: 400;
-  letter-spacing: -0.6px;
-  line-height: 1.2;
-  margin: 28px 0 15px;
-  padding: 0;
+.ins .pp-offer-actions .t-meta {
+  margin: var(--s4) 0 0;
+  font-size: 13px;
 }
-.pp-offer-section-nav a:first-child:after {
-  display: none;
-}
-.pp-offer-hero-bottom > span {
-  max-width: none;
-}
-.pp-offer-employer [data-company-logo] {
-  width: 55px;
-  height: 55px;
-  border: 1px solid var(--pp-ink);
-  border-radius: 16px;
-}
-.pp-employer-copy a {
-  margin-top: 20px;
-}
-.pp-offer-related-heading > a {
+.ins .pp-offer-section-nav {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  margin-bottom: var(--s2);
 }
+.ins .pp-offer-section-nav a {
+  font: 400 11px/1 var(--f-code);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--mute);
+  border: 1px solid var(--frame);
+  background: var(--surface);
+  padding: 10px 14px;
+}
+.ins .pp-offer-section-nav a + a {
+  margin-left: -1px;
+}
+.ins .pp-offer-section-nav a:hover {
+  color: var(--ink);
+}
+.ins .pp-offer-section,
+.ins .pp-offer-employer {
+  scroll-margin-top: calc(64px + var(--s5));
+}
+.ins .pp-offer-section:focus-visible,
+.ins .pp-offer-employer:focus-visible {
+  outline-offset: 8px;
+}
+.ins .pp-offer-employer .t-body {
+  margin: 0 0 var(--s5);
+}
+.ins .pp-offer-related {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+.ins .detail .d-body > .t-body {
+  margin-top: 0;
+}
+
 @media (max-width: 1100px) {
-  .pp-offer-actions > a,
-  .pp-offer-actions > button {
-    font-size: 13px;
-  }
-  .pp-container {
-    width: calc(100% - 48px);
-  }
-  .pp-job-card > [data-company-logo] {
-    margin-left: 16px;
-    width: 38px;
-    height: 38px;
-  }
-  .pp-offer-pay .pp-salary-tag {
-    font-size: 22px;
+  .ins .pp-board-layout {
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: var(--s5);
   }
 }
 @media (max-width: 850px) {
-  .pp-search-submit,
-  .pp-offer-actions > a,
-  .pp-offer-actions > button {
-    font-size: 12px;
+  .ins .pp-board-layout {
+    grid-template-columns: 1fr;
+    gap: var(--s4);
   }
-  .pp-job-card > [data-company-logo] {
-    margin-left: 22px;
-    width: 40px;
-    height: 40px;
-  }
-  .pp-board-layout {
-    position: relative;
-    display: block;
-  }
-  .pp-filter-position {
-    position: absolute;
-    top: 85px;
-    left: 0;
-  }
-  .pp-results-heading {
-    margin-bottom: 76px;
-  }
-  .pp-offer-pay .pp-salary-tag {
-    font-size: 20px;
-  }
-  .pp-offer-section [data-job-description] h3 {
-    font-size: 26px;
+  .ins .pp-filter-position {
+    position: static;
   }
 }
-@media (max-width: 700px) {
-  .pp-offer-actions > a,
-  .pp-offer-actions > button {
-    font-size: 14px;
+@media (max-width: 760px) {
+  .ins .job-filters-bar {
+    flex-wrap: wrap;
+    overflow: visible;
   }
-  .pp-offer-pay .pp-salary-tag {
-    font-size: 25px;
-    line-height: 1.45;
+  .ins .segment-choice {
+    overflow-x: auto;
+    max-width: 100%;
   }
-  .pp-offer-identity > [data-company-logo] {
-    width: 47px;
-    height: 47px;
+  .ins .pp-search-form {
+    flex: 1 1 100%;
+    flex-wrap: wrap;
   }
-  .pp-offer-section [data-job-description] h3 {
-    font-size: 26px;
-    margin: 26px 0 16px;
+  .ins .pp-search-form .fsearch {
+    flex: 1 1 100%;
+    min-width: 0;
   }
-}
-@media (max-width: 600px) {
-  .pp-offer-pay .pp-salary-tag {
-    line-height: 1.35;
+  .ins .fselect {
+    flex: 1 1 auto;
+    border-left: 1px solid var(--frame);
+    border-top: 0;
   }
-  .pp-container {
-    width: calc(100% - 36px);
+  .ins .fselect select {
+    width: 100%;
+    min-height: 46px;
   }
-  .pp-job-card > [data-company-logo] {
-    margin: 19px 0 0 14px;
-    width: 35px;
-    height: 35px;
-    font-size: 14px;
+  .ins .pp-search-form .pp-search-submit {
+    margin: -1px 0 0 -1px;
   }
-  .pp-search-submit {
-    min-height: 42px;
-    height: 42px;
-    font-size: 12px;
-    padding: 8px 12px;
-    gap: 6px;
+  .ins .job-list .row .upd {
+    display: none;
   }
-  .pp-filter-position {
-    top: 77px;
-  }
-  .pp-results-controls {
-    justify-content: flex-end;
-  }
-  .pp-sort-label {
-    margin-right: auto;
-  }
-  .pp-offer-related .pp-job-card > [data-company-logo] {
-    margin-left: 14px;
+  .ins .job-list .row .mode {
+    justify-self: end;
   }
 }
-.pp-page-button[aria-current="page"] {
-  background: var(--pp-ink);
-  color: white;
-}
-@media (max-width: 360px) {
-  header a[aria-label="DoRoboty.ai — strona główna"] {
-    font-size: 20px;
-    letter-spacing: -1px;
-  }
-}
-.pp-container,
-.pp-filter-dialog {
-  font-family: var(--pp-font);
-  font-size: 16px;
-  line-height: 1.5;
-  letter-spacing: normal;
-}
-.pp-filter-dialog[data-slot="dialog-content"] {
-  animation: none;
-  --tw-translate-x: 0;
-  --tw-translate-y: 0;
-}
-@media (max-width: 600px) {
-  .pp-results-heading {
-    margin-bottom: 24px;
-  }
-}
-
-/* Host actions are React links/buttons rather than the reference .button siblings. */
-.pp-offer-actions > :is(a, button) + :is(a, button) {
-  margin-top: 10px;
+.ins .detail .d-head .chips {
+  margin-bottom: var(--s6);
 }

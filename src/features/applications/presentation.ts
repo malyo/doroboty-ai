@@ -43,15 +43,14 @@ export function applicationStageLabel(stage: string) {
   return applicationStageLabels[stage as keyof typeof applicationStageLabels] ?? "Zmiana etapu";
 }
 
+// Instrument status badges carry no colour: green means only "available" and orange only the main action.
+// In-progress states get an ink frame (.badge.warn), closed states are muted (.badge.off).
 export function applicationStatusClass(status: string) {
-  if (status === "hired" || status === "continued") {
-    return "bg-[var(--gui-success-transparent)] text-[var(--gui-text)]";
+  if (status === "interview" || status === "continued") {
+    return "border-[var(--ink)] text-[var(--ink)]";
   }
   if (status === "rejected" || status === "withdrawn") {
-    return "bg-[var(--gui-error-transparent)] text-[var(--gui-text)]";
+    return "border-[var(--rule)] text-[var(--mute)]";
   }
-  if (status === "interview") {
-    return "bg-[var(--gui-color-1-transparent)] text-[var(--gui-text)]";
-  }
-  return "bg-secondary text-secondary-foreground";
+  return "border-[var(--frame)] text-[var(--ink)]";
 }

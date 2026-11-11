@@ -1,24 +1,14 @@
 # Runtime typography
 
-The application loads local Geist Serif Regular 400 from `docs/design-system/agent-kit/assets/fonts/GeistSerif-Regular.woff2` through Vite. Its SIL OFL license remains beside the font. All headings use this weight without synthetic bold. Body and controls use Arial/Helvetica/system sans; they make no remote font requests.
+The application loads only local fonts (no remote font endpoint):
+
+- **DM Mono** 400 and 500 (`@fontsource/dm-mono`): titles (500) and data (400).
+- **Nunito Sans** variable with optical size (`@fontsource-variable/nunito-sans`): people, descriptions and interface text.
+- **Doto** 700 (`@fontsource/doto`): console counters only.
+- **Departure Mono** 400 (`DepartureMono-Regular.woff2`, Helena Zhang, SIL OFL 1.1, license in `DepartureMono-LICENSE.txt`): 11px uppercase labels only. Copied from `.claude/skills/doroboty-instrument-ui/assets/fonts/`.
+
+The npm font packages are imported in `src/main.tsx`; Departure Mono is declared in `src/app/instrument.css`.
 
 ## Retained historical assets
 
-# Timeless Sans Variable
-
-`timeless-sans-variable.woff2` is the free Timeless Sans variable font served by the official
-[Timeless Type](https://timeless.co/type) website. The vendor describes the Timeless family as
-free for personal and commercial use.
-
-The previous runtime used the Grotesk cut with `STYL` and `ital` pinned to `0`. These are existing implementation assets, not the target for new headings. Follow the accepted [design-system integration guide](../../../docs/design-system/README.md), which supplies local Geist Serif Regular and its license.
-
-## Web-optimized Grotesk
-
-`timeless-grotesk-web-variable.woff2` is generated from the original asset by
-pinning `STYL=0` and `ital=0`, matching the existing global theme settings. It keeps
-all 417 mapped Unicode characters, glyph coverage and the weight axis (300–800),
-while discarding unused stylistic/italic interpolation. The original is retained.
-
-Generate with FontTools `varLib.instancer` using those axis values and WOFF2 output;
-preserve timestamps for repeatability. FontTools is asset tooling, not a runtime dependency.
-These retained Timeless assets are no longer loaded by the application.
+`timeless-sans-variable.woff2` and `timeless-grotesk-web-variable.woff2` (Timeless Type, free for personal and commercial use) are earlier implementation assets and are not loaded by the application. Geist Serif (Poster People) remains in the immutable kit under docs/design-system/agent-kit and is not loaded either.

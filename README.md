@@ -4,20 +4,20 @@ A frontend-only job marketplace for participants to extend and test. Built with 
 
 ## Design system — start here for UI work
 
-Read [project integration instructions](docs/design-system/README.md), [host implementation rules](docs/design-system/IMPLEMENTATION.md) and [application acceptance checklist](docs/design-system/VERIFICATION.md), then [design.md](docs/design-system/agent-kit/design.md), [component API](docs/design-system/agent-kit/components/API.md) and the relevant [human documentation](docs/design-system/agent-kit/reference/index.html). The complete 67-file kit is stored under docs/design-system/agent-kit, including reusable CSS/JS, component states, listing/offer examples, screenshots, Geist Serif with license and illustration. No other chat or global skill is required.
+The app uses the **Instrument** direction: a light work surface on a sky gradient, 1px frames with square corners, DM Mono titles and data, Nunito Sans text, Departure Mono labels and Doto counters. Contrast is reserved for the dark console, inverted selected rows and one orange main action. Read [GUI.md](GUI.md), then the project skill [.claude/skills/doroboty-instrument-ui/design.md](.claude/skills/doroboty-instrument-ui/design.md) and its [screen recipes](.claude/skills/doroboty-instrument-ui/references/screen-recipes.md).
+
+Poster People, the previous direction, is kept as an immutable historical kit under docs/design-system/agent-kit:
 
 ```sh
 npm run design-system:check
 npm run design-system:dev
 ```
 
-With Node 24, the first command verifies the preserved kit and examples; the second serves a separate local preview at http://127.0.0.1:8952/. No kit installation is needed. The main app uses port 3001 as below.
-
-Build UI from this system, adapting its anatomy and visual roles into the existing React/Base UI components and host tokens. Preserve application behavior and hash routing; do not replace product state with the standalone demo fixtures/controllers. The application has a host adaptation. For every UI task, compare the affected anatomy, type roles, state and keyboard behavior with the reference; passing kit checks alone does not establish visual acceptance. See the integration guide for exact reading order, assets, React mapping, responsive rules and verification. AGENTS.md and CLAUDE.md enforce the same direction.
+The first command verifies that kit; the second serves it at http://127.0.0.1:8952/. Do not use it for new UI. The main app uses port 3001 as below.
 
 ## Run
 
-Requirements: **Node.js 24 and npm**.
+Requirements: **Node.js 24 and npm**. Fonts are installed as npm packages; no remote font requests at runtime.
 
 ```sh
 npm ci

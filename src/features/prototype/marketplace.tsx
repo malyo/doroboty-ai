@@ -1,15 +1,13 @@
 import { Link, useLocation, useParams, useSearchParams } from "react-router";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { ArrowUpRight, Users, MapPin, BriefcaseBusiness, Bookmark } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Search, ArrowRight, Monitor, X } from "lucide-react";
 import { BackLink } from "@/components/back-link";
 import { ResponsivePanel } from "@/components/responsive-panel";
 import { SalaryFact } from "@/features/jobs/salary-fact";
-import { functionLabels } from "@/features/jobs/presentation";
-import peopleArt from "../../../docs/design-system/agent-kit/assets/people.png";
+import { functionLabels, categorySigns } from "@/features/jobs/presentation";
 import { CompanyLogo } from "@/features/jobs/company-logo";
-import { JobCard } from "@/features/jobs/job-card";
+import { JobCard, JobList } from "@/features/jobs/job-card";
 import { JobFiltersForm } from "@/features/jobs/job-filters";
 import { JobPagination } from "@/features/jobs/job-pagination";
 import { JobDescription } from "@/features/jobs/job-description";
@@ -25,7 +23,10 @@ import type { JobWithCompany } from "@/features/jobs/types";
 import { usePrototype } from "./store";
 import { currentPerson, publishedJobs } from "./model";
 import { NotFound } from "./shell";
-import { cn } from "@/lib/utils";
+import { plural } from "@/lib/plural";
+
+/** Console counters are two digits like a display: 7 → "07". */
+const counter = (n: number) => String(n).padStart(2, "0");
 
 function LocalMap({ jobs }: { jobs: JobWithCompany[] }) {
   const [selected, setSelected] = useState<string | null>(null);
@@ -44,8 +45,8 @@ function LocalMap({ jobs }: { jobs: JobWithCompany[] }) {
           <path
             d="M140 45 220 65 320 40 375 60 440 50 505 150 480 240 520 335 440 420 355 435 310 480 230 435 150 445 90 350 70 260 95 160Z"
             fill="var(--gui-surface-muted)"
-            stroke="var(--gui-edge)"
-            strokeWidth="2"
+            stroke="var(--frame)"
+            strokeWidth="1"
           />
         </svg>
         {markers.map((x) => (
@@ -69,7 +70,7 @@ function LocalMap({ jobs }: { jobs: JobWithCompany[] }) {
       <div className="prototype-panel">
         {job ? (
           <>
-            <h2>{job.title}</h2>
+            <h2 className="t-sec">{job.title}</h2>
             <p className="mt-3 text-sm text-muted-foreground">
               Oferty w tej lokalizacji: {locationCount(job)}
             </p>
@@ -86,7 +87,7 @@ function LocalMap({ jobs }: { jobs: JobWithCompany[] }) {
         <ul className="mt-5 space-y-3">
           {jobs.map((x) => (
             <li key={x.id}>
-              <Link className="text-[var(--gui-link)] underline" to={`/oferty/${x.slug}`}>
+              <Link className="underline underline-offset-[3px]" to={`/oferty/${x.slug}`}>
                 {x.title} · {x.company.name}
               </Link>
             </li>
@@ -151,93 +152,87 @@ export function JobsPage() {
   const locations = [...new Set(all.flatMap((x) => x.locations))];
   return (
     <>
-      <section className="pp-intro-section">
-        <div className="pp-container">
-          <div className="pp-intro-grid">
-            <div className="pp-intro-copy">
-              <h1>
-                Dobra robota.
-                <br />
-                <span>Z AI w środku.</span>
-              </h1>
-              <p>
-                Dla ludzi, którzy tworzą, wdrażają i rozwijają AI.
-                <br />
-                Znajdź rolę, w której zrobisz coś dobrego.
-              </p>
-            </div>
-            <img
-              className="pp-people-art"
-              src={peopleArt}
-              alt="Dwie osoby pracujące razem z laptopem"
-            />
-          </div>
-          <form
-            key={`${filters.query ?? ""}:${filters.location ?? ""}`}
-            className="pp-search-form"
-            onSubmit={search}
-          >
-            <label className="pp-search-field">
-              <span>
-                <Search className="pp-icon" />
-              </span>
-              <span className="sr-only">Szukaj ofert</span>
-              <input
-                name="query"
-                aria-label="Szukaj ofert"
-                maxLength={100}
-                defaultValue={filters.query ?? ""}
-                placeholder="Stanowisko, firma lub słowo kluczowe"
-              />
-            </label>
-            <label className="pp-location-field">
-              <span>
-                <MapPin className="pp-icon" />
-              </span>
-              <select
-                name="location"
-                aria-label="Lokalizacja"
-                defaultValue={filters.location ?? ""}
-              >
-                <option value="">Cała Polska</option>
-                {[...new Set([...locations, ...(filters.location ? [filters.location] : [])])].map(
-                  (x) => (
-                    <option key={x}>{x}</option>
-                  ),
-                )}
-              </select>
-            </label>
-            <Button type="submit" className="pp-search-submit">
-              Szukaj <ArrowRight className="pp-icon" />
-            </Button>
-          </form>
-          <div className="pp-category-tabs" aria-label="Kategorie ofert">
-            {(
-              [
-                ["", "Wszystkie oferty", ""],
-                ["build", "Build", "Twórz AI"],
-                ["apply", "Apply", "Wdrażaj AI"],
-                ["lead", "Lead", "Wyznaczaj kierunek"],
-              ] as const
-            ).map(([key, label, description]) => (
-              <button
-                key={key}
-                className={cn("pp-category-tab", (filters.category ?? "") === key && "pp-selected")}
-                aria-pressed={(filters.category ?? "") === key}
-                onClick={() => change("category", key)}
-              >
-                <span>
-                  <b>{label}</b>
-                  <small>{description}</small>
-                </span>
-                <span className="pp-category-count">
-                  {filterJobs(all, { ...filters, category: key || undefined }).length}
-                </span>
-              </button>
-            ))}
-          </div>
+      <header className="console pp-intro-section">
+        <div className="c-head">
+          <span>DoRoboty / Oferty / Najnowsze</span>
+          <span>Build · Apply · Lead</span>
         </div>
-      </section>
+        <h1 className="c-title pp-intro-copy">
+          Dobra robota. Z AI w środku. {jobs.length}{" "}
+          {plural(jobs.length, "oferta", "oferty", "ofert")} dla ludzi, którzy dowożą z AI.
+        </h1>
+        <div className="c-stats">
+          <div className="c-stat">
+            <b>{counter(all.length)}</b>
+            <small>Wszystkie oferty</small>
+          </div>
+          {(["build", "apply", "lead"] as const).map((key) => (
+            <div className="c-stat" key={key}>
+              <b>{counter(all.filter((x) => x.category === key).length)}</b>
+              <small>
+                {categorySigns[key]} {categoryLabels[key]}
+              </small>
+            </div>
+          ))}
+        </div>
+      </header>
+      <div className="filters job-filters-bar">
+        <div className="choice segment-choice" role="group" aria-label="Kategorie ofert">
+          {(
+            [
+              ["", "Wszystkie oferty"],
+              ["build", "Build"],
+              ["apply", "Apply"],
+              ["lead", "Lead"],
+            ] as const
+          ).map(([key, label]) => (
+            <button
+              key={key}
+              type="button"
+              className="fpill pp-category-tab"
+              aria-pressed={(filters.category ?? "") === key}
+              onClick={() => change("category", key)}
+            >
+              {key ? `${categorySigns[key]} ` : ""}
+              {label} ({filterJobs(all, { ...filters, category: key || undefined }).length})
+            </button>
+          ))}
+        </div>
+        <form
+          key={`${filters.query ?? ""}:${filters.location ?? ""}`}
+          className="pp-search-form"
+          onSubmit={search}
+        >
+          <label className="fsearch">
+            <span className="sr-only">Szukaj ofert</span>
+            <input
+              name="query"
+              aria-label="Szukaj ofert"
+              maxLength={100}
+              defaultValue={filters.query ?? ""}
+              placeholder="Szukaj: stanowisko, firma, słowo kluczowe"
+            />
+            <kbd aria-hidden="true">/</kbd>
+          </label>
+          <label className="fselect">
+            <span className="sr-only">Lokalizacja</span>
+            <select name="location" aria-label="Lokalizacja" defaultValue={filters.location ?? ""}>
+              <option value="">Cała Polska</option>
+              {[...new Set([...locations, ...(filters.location ? [filters.location] : [])])].map(
+                (x) => (
+                  <option key={x}>{x}</option>
+                ),
+              )}
+            </select>
+          </label>
+          <Button type="submit" className="pp-search-submit">
+            Szukaj
+          </Button>
+        </form>
+        <span className="count">
+          {jobs.length} z {all.length}
+        </span>
+      </div>
       <section className="pp-container pp-board-layout">
         <div className="pp-filter-position">
           <ResponsivePanel
@@ -251,13 +246,15 @@ export function JobsPage() {
         <div className="pp-results-column">
           <div className="pp-results-heading">
             <div className="pp-results-title">
-              <h2 ref={resultsHeading} tabIndex={-1}>
+              <h2 className="t-sec" ref={resultsHeading} tabIndex={-1}>
                 Oferty pracy
               </h2>
-              <span role="status">{jobs.length}</span>
+              <span className="t-data" role="status" aria-live="polite">
+                {jobs.length}
+              </span>
             </div>
             <div className="pp-results-controls">
-              <span className="pp-sort-label">Najnowsze</span>
+              <span className="t-label pp-sort-label">Najnowsze</span>
               <Link
                 className="pp-view-link"
                 aria-current={view === "list" ? "page" : undefined}
@@ -280,7 +277,8 @@ export function JobsPage() {
                 .filter(([k, v]) => k !== "page" && v)
                 .map(([key, value]) => (
                   <button
-                    className="pp-filter-chip"
+                    className="fpill pp-filter-chip"
+                    aria-pressed="true"
                     key={key}
                     aria-label={`Usuń filtr: ${value}`}
                     ref={(element) => {
@@ -289,10 +287,10 @@ export function JobsPage() {
                     }}
                     onClick={() => removeFilter(key)}
                   >
-                    {String(value)} <X className="pp-icon" />
+                    {String(value)} <span aria-hidden="true">✕</span>
                   </button>
                 ))}
-              <button className="pp-text-button" onClick={reset}>
+              <button className="tx pp-text-button" onClick={reset}>
                 Wyczyść
               </button>
             </div>
@@ -302,22 +300,27 @@ export function JobsPage() {
               <LocalMap jobs={jobs} />
             ) : (
               <>
-                <div className="pp-job-list">
+                {savedIds && savedIds.size > 0 && (
+                  <p className="t-meta list-legend">
+                    Ciemny wiersz oznacza ofertę zapisaną przez Ciebie.
+                  </p>
+                )}
+                <JobList>
                   {pagination.items.map((job) => (
                     <JobCard key={job.id} job={job} saved={savedIds?.has(job.id)} />
                   ))}
-                </div>
+                </JobList>
                 <JobPagination pagination={pagination} filters={filters} />
               </>
             )
           ) : (
-            <div className="pp-empty-state">
-              <span className="pp-empty-mark">
-                <Search className="pp-icon" />
-              </span>
+            <div className="empty pp-empty-state">
+              <span className="t-label">0 wyników</span>
               <h3>Brak ofert dla tych filtrów</h3>
               <p>Wyczyść część kryteriów i spróbuj ponownie.</p>
-              <Button onClick={reset}>Pokaż wszystkie oferty</Button>
+              <button type="button" className="tx" onClick={reset}>
+                Pokaż wszystkie oferty
+              </button>
             </div>
           )}
         </div>
@@ -354,149 +357,124 @@ export function JobPage() {
     .sort((a, b) => Number(b.category === job.category) - Number(a.category === job.category))
     .slice(0, 3);
   return (
-    <article className="pp-offer-page pp-container pp-offer-main">
-      <nav className="pp-offer-breadcrumb" aria-label="Powrót do ofert">
-        <BackLink to="/oferty">Wróć do ofert</BackLink>
-        <span>{job.company.name}</span>
-      </nav>
-      <div className="pp-offer-grid">
-        <header className="pp-offer-hero">
-          <div className="pp-offer-identity">
-            <CompanyLogo company={job.company} />
-            <div>
-              <Link className="pp-offer-company-link" to={`/firmy/${job.company.slug}`}>
-                {job.company.name}
-                <ArrowUpRight className="pp-icon" />
-              </Link>
-              <p className="pp-offer-date">
-                Opublikowano {new Intl.DateTimeFormat("pl-PL").format(new Date(job.publishedAt))}
-              </p>
-            </div>
-            <span className="pp-offer-category">{categoryLabels[job.category]}</span>
-          </div>
-          <h1>{job.title}</h1>
-          <div className="pp-offer-key-facts">
-            <span>
-              <MapPin className="pp-icon" />
-              {job.locations.join(" / ")}
-            </span>
-            <span>
-              <Monitor className="pp-icon" />
-              {remoteLabels[job.remoteStatus]}
-            </span>
-            <span>
-              <BriefcaseBusiness className="pp-icon" />
-              {seniorityLabels[job.seniority]}
-            </span>
-          </div>
-          <div className="pp-offer-skill-row">
-            <span>{functionLabels[job.function]}</span>
-          </div>
-          <div className="pp-offer-hero-bottom">
-            <span>{job.summary}</span>
-          </div>
-        </header>
-        <aside className="pp-offer-sidebar">
-          <div className="pp-offer-action-card">
-            <div className="pp-offer-pay">
-              <p className="pp-offer-eyebrow">Wynagrodzenie</p>
-              <SalaryFact job={job} />
-            </div>
-            <h2 className="sr-only">Konkrety</h2>
-            <dl className="pp-offer-terms">
-              {[
-                ["Forma współpracy", contractLabels[job.contract]],
-                ["Tryb pracy", remoteLabels[job.remoteStatus]],
-                ["Lokalizacja", job.locations.join(" / ")],
-                ["Doświadczenie", seniorityLabels[job.seniority]],
-              ].map(([key, value]) => (
-                <div key={key}>
-                  <dt>{key}</dt>
-                  <dd>{value}</dd>
-                </div>
-              ))}
-            </dl>
-            <div className="pp-offer-actions">
-              {person?.role === "candidate" ? (
-                <>
-                  <Link
-                    className={buttonVariants()}
-                    to={submitted ? `/app/aplikacje/${submitted.id}` : `/aplikuj/${job.slug}`}
-                  >
-                    {submitted ? "Zobacz swoją aplikację" : "Aplikuj"}
-                    <ArrowRight />
-                  </Link>
-                  <Button
-                    variant="outline"
-                    aria-label="Zapisz ofertę"
-                    aria-pressed={saved}
-                    onClick={() => run({ type: "toggle_saved", jobId: job.id })}
-                  >
-                    <Bookmark className={cn(saved && "fill-current")} />
-                    Zapisz ofertę
-                  </Button>
-                </>
-              ) : !person ? (
-                <Link
-                  className={buttonVariants()}
-                  to={`/auth/sign-in?audience=candidate&next=${encodeURIComponent(`/aplikuj/${job.slug}`)}`}
-                >
-                  Wybierz osobę i aplikuj
-                </Link>
-              ) : (
-                <p>Aplikacje są dostępne z profilu kandydata.</p>
-              )}
-              <p>Prototyp: aplikacja zostaje w tym przeglądarkowym scenariuszu.</p>
-            </div>
-          </div>
-        </aside>
-        <div className="pp-offer-description">
-          <nav className="pp-offer-section-nav" aria-label="Sekcje oferty">
-            <Link to={{ pathname: `/oferty/${job.slug}`, hash: "#role" }}>O roli</Link>
-            <Link to={{ pathname: `/oferty/${job.slug}`, hash: "#employer" }}>O firmie</Link>
-          </nav>
-          <div className="pp-offer-reading">
-            <section id="role" tabIndex={-1} className="pp-offer-section">
-              <h2>O roli</h2>
-              <JobDescription description={job.description} />
-            </section>
-          </div>
+    <article className="detail pp-offer-page">
+      <header className="d-head pp-offer-hero">
+        <nav className="pp-offer-breadcrumb" aria-label="Powrót do ofert">
+          <BackLink to="/oferty">Wróć do ofert</BackLink>
+        </nav>
+        <div className="t-label">
+          {categorySigns[job.category]} {categoryLabels[job.category]} · Opublikowano{" "}
+          {new Intl.DateTimeFormat("pl-PL").format(new Date(job.publishedAt))}
         </div>
-        <section className="pp-offer-employer" id="employer" tabIndex={-1}>
-          <div className="pp-employer-top">
-            <CompanyLogo company={job.company} />
-            <div>
-              <p className="pp-offer-eyebrow">Poznaj firmę</p>
-              <h2>{job.company.name}</h2>
+        <h1 className="t-h1">{job.title}</h1>
+        <p className="lead">{job.summary}</p>
+        <div className="offer-company">
+          <CompanyLogo company={job.company} />
+          <Link className="pp-offer-company-link" to={`/firmy/${job.company.slug}`}>
+            {job.company.name}
+          </Link>
+        </div>
+        <div className="chips">
+          <span className="chip">{job.locations.join(" / ")}</span>
+          <span className="chip">{remoteLabels[job.remoteStatus]}</span>
+          <span className="chip">{seniorityLabels[job.seniority]}</span>
+          <span className="chip">{functionLabels[job.function]}</span>
+        </div>
+      </header>
+      <aside className="side pp-offer-sidebar">
+        <div className="cap">
+          <span>Fakty</span>
+          <span>Oferta</span>
+        </div>
+        <h2 className="sr-only">Konkrety</h2>
+        <div className="pp-offer-pay">
+          <p className="t-label">Wynagrodzenie</p>
+          <SalaryFact job={job} />
+        </div>
+        <dl className="kv pp-offer-terms">
+          {[
+            ["Forma", contractLabels[job.contract]],
+            ["Tryb", remoteLabels[job.remoteStatus]],
+            ["Lokalizacja", job.locations.join(" / ")],
+            ["Doświadczenie", seniorityLabels[job.seniority]],
+          ].map(([key, value]) => (
+            <div key={key} className="contents">
+              <dt>{key}</dt>
+              <dd>{value}</dd>
             </div>
-          </div>
-          <div className="pp-employer-copy">
-            <div>
-              <p>{job.company.description}</p>
+          ))}
+        </dl>
+        <div className="pp-offer-actions">
+          {person?.role === "candidate" ? (
+            <>
               <Link
-                className={buttonVariants({ variant: "outline", size: "sm" })}
-                to={`/firmy/${job.company.slug}`}
+                className={buttonVariants({ variant: "action", className: "wide" })}
+                to={submitted ? `/app/aplikacje/${submitted.id}` : `/aplikuj/${job.slug}`}
               >
-                Oferty tej firmy <ArrowRight />
+                {submitted ? "Zobacz swoją aplikację" : "Aplikuj"}
               </Link>
-            </div>
-            <img src={peopleArt} alt="" />
+              <Button
+                className="wide"
+                aria-label="Zapisz ofertę"
+                aria-pressed={saved}
+                onClick={() => run({ type: "toggle_saved", jobId: job.id })}
+              >
+                {saved ? "Zapisana" : "Zapisz ofertę"}
+              </Button>
+            </>
+          ) : !person ? (
+            <Link
+              className={buttonVariants({ variant: "action", className: "wide" })}
+              to={`/auth/sign-in?audience=candidate&next=${encodeURIComponent(`/aplikuj/${job.slug}`)}`}
+            >
+              Wybierz osobę i aplikuj
+            </Link>
+          ) : (
+            <p className="t-meta">Aplikacje są dostępne z profilu kandydata.</p>
+          )}
+          <p className="t-meta">
+            Firma zobaczy Twój profil DoRoboty i odpowiedzi z formularza. Prototyp: aplikacja
+            zostaje w tym przeglądarkowym scenariuszu.
+          </p>
+        </div>
+      </aside>
+      <div className="d-body pp-offer-description">
+        <nav className="pp-offer-section-nav" aria-label="Sekcje oferty">
+          <Link to={{ pathname: `/oferty/${job.slug}`, hash: "#role" }}>O roli</Link>
+          <Link to={{ pathname: `/oferty/${job.slug}`, hash: "#employer" }}>O firmie</Link>
+        </nav>
+        <section id="role" tabIndex={-1} className="pp-offer-section">
+          <h2 className="t-sec">O roli</h2>
+          <JobDescription description={job.description} />
+        </section>
+        <section className="pp-offer-employer" id="employer" tabIndex={-1}>
+          <h2 className="t-sec">O firmie</h2>
+          <div className="offer-company">
+            <CompanyLogo company={job.company} />
+            <span className="t-name">{job.company.name}</span>
           </div>
+          <p className="t-body">{job.company.description}</p>
+          <Link
+            className={buttonVariants({ variant: "outline", size: "sm" })}
+            to={`/firmy/${job.company.slug}`}
+          >
+            Oferty tej firmy
+          </Link>
         </section>
       </div>
       {related.length > 0 && (
         <section className="pp-offer-related">
-          <div className="pp-offer-related-heading">
-            <h2>Może też Cię zainteresować</h2>
-            <Link to="/oferty">
-              Wszystkie oferty <ArrowRight className="pp-icon" />
+          <div className="sec-head">
+            <h2 className="t-sec">Może też Cię zainteresować</h2>
+            <Link className="tx" to="/oferty">
+              Wszystkie oferty
             </Link>
           </div>
-          <div className="pp-job-list">
+          <JobList>
             {related.map((x) => (
               <JobCard key={x.id} job={x} />
             ))}
-          </div>
+          </JobList>
         </section>
       )}
     </article>
@@ -510,57 +488,54 @@ export function CompanyPage() {
   if (!company) return <NotFound />;
   const jobs = publishedJobs(state).filter((x) => x.companyId === company.id);
   return (
-    <article className="mx-auto max-w-[1360px] px-5 py-14 lg:px-8 lg:py-20">
-      <div className="grid gap-8 pb-12 shadow-[var(--gui-divider-bottom-shadow)] lg:grid-cols-[1fr_320px]">
-        <div>
+    <article className="detail company-page">
+      <header className="d-head">
+        <div className="t-label">Firma · {jobs.length} otwarte role</div>
+        <div className="offer-company">
           <CompanyLogo company={company} size="large" />
-          <h1 className="mt-3 text-4xl font-semibold tracking-[var(--gui-tracking-s)] sm:text-5xl">
-            {company.name}
-          </h1>
-          <p className="mt-5 max-w-3xl text-lg leading-relaxed">{company.summary}</p>
-          <p className="mt-5 max-w-3xl text-base leading-relaxed text-muted-foreground">
-            {company.description}
-          </p>
         </div>
-        <dl className="h-fit rounded-xl bg-muted/35 p-6 text-sm">
-          <div className="flex gap-2">
-            <MapPin className="size-5" />
-            <div>
-              <dt className="font-medium">Lokalizacja</dt>
-              <dd className="mt-1 text-muted-foreground">{company.location}</dd>
-            </div>
-          </div>
-          <div className="mt-5 flex gap-2">
-            <Users className="size-5" />
-            <div>
-              <dt className="font-medium">Wielkość</dt>
-              <dd className="mt-1 text-muted-foreground">{company.sizeLabel}</dd>
-            </div>
-          </div>
-          {/^https?:\/\//i.test(company.websiteUrl) && (
-            <a
-              className="mt-6 inline-flex items-center gap-2 font-medium text-[var(--gui-link)] hover:underline"
-              href={company.websiteUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Strona firmy <ArrowUpRight className="size-4" />
-            </a>
-          )}
+        <h1 className="t-h1">{company.name}</h1>
+        <p className="lead">{company.summary}</p>
+      </header>
+      <aside className="side">
+        <div className="cap">
+          <span>Fakty</span>
+        </div>
+        <dl className="kv">
+          <dt>Lokalizacja</dt>
+          <dd>{company.location}</dd>
+          <dt>Wielkość</dt>
+          <dd>{company.sizeLabel}</dd>
         </dl>
-      </div>
-      <section className="py-12">
-        <h2 className="text-2xl font-semibold">Otwarte role</h2>
-        {jobs.length > 0 ? (
-          <div className="mt-7 pp-job-list">
-            {jobs.map((job) => (
-              <JobCard key={job.id} job={job} />
-            ))}
-          </div>
-        ) : (
-          <p className="mt-5 text-lg">Ta firma nie ma teraz aktywnych ofert.</p>
+        {/^https?:\/\//i.test(company.websiteUrl) && (
+          <a
+            className={buttonVariants({ className: "wide ext" })}
+            href={company.websiteUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Strona firmy
+          </a>
         )}
-      </section>
+      </aside>
+      <div className="d-body">
+        <p className="t-body">{company.description}</p>
+        <section>
+          <h2 className="t-sec">Otwarte role</h2>
+          {jobs.length > 0 ? (
+            <JobList>
+              {jobs.map((job) => (
+                <JobCard key={job.id} job={job} />
+              ))}
+            </JobList>
+          ) : (
+            <div className="empty">
+              <span className="t-label">0 ofert</span>
+              <p>Ta firma nie ma teraz aktywnych ofert.</p>
+            </div>
+          )}
+        </section>
+      </div>
     </article>
   );
 }

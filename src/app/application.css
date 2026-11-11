@@ -5,10 +5,11 @@
 .application-header {
   margin: 30px 0 34px;
 }
+/* .t-h1 role: DM Mono 500, 52px (mobile 32px). */
 .application-header h1 {
-  font-size: 64px;
-  line-height: 1.04;
-  letter-spacing: -2px;
+  font-size: 52px;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
 }
 .application-header p {
   color: var(--gui-text-muted);
@@ -33,9 +34,10 @@
   position: static;
 }
 .application-eyebrow {
-  color: var(--gui-text-muted);
-  font-size: 12px;
-  line-height: 1.5;
+  color: var(--mute);
+  font: 400 11px/1.3 var(--gui-font-label);
+  letter-spacing: 1px;
+  text-transform: uppercase;
   margin-bottom: 22px;
 }
 .application-company {
@@ -51,12 +53,12 @@
   width: 44px;
   height: 44px;
   border: 1px solid var(--gui-edge);
-  border-radius: 10px;
+  border-radius: 0;
 }
 .application-offer h2 {
   font-size: 28px;
-  line-height: 1.12;
-  letter-spacing: -0.7px;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
   margin-bottom: 14px;
 }
 .application-location {
@@ -229,9 +231,6 @@
   overflow-wrap: anywhere;
 }
 @media (max-width: 1100px) {
-  .application-header h1 {
-    font-size: 54px;
-  }
   .application-layout {
     gap: 24px;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
@@ -247,9 +246,6 @@
   .application-offer {
     position: static;
   }
-  .application-header h1 {
-    font-size: 47px;
-  }
 }
 @media (max-width: 600px) {
   .application-page {
@@ -259,9 +255,8 @@
     margin-block: 24px 28px;
   }
   .application-header h1 {
-    font-size: 43px;
-    line-height: 1.06;
-    letter-spacing: -1.5px;
+    font-size: 32px;
+    letter-spacing: -0.035em;
   }
   .application-header p {
     font-size: 13px;
@@ -296,6 +291,6 @@
   min-width: 161px;
 }
 .application-actions .application-send:disabled {
-  background: var(--gui-color-1);
-  color: var(--gui-text);
+  background: var(--chip);
+  color: var(--ink);
 }

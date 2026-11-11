@@ -10,10 +10,10 @@ export function JobFiltersForm({
   onReset: () => void;
 }) {
   return (
-    <div className="pp-filter-panel">
-      <div className="pp-filter-heading">
+    <div className="frame pp-filter-panel">
+      <div className="cap pp-filter-heading">
         <h2>Po Twojemu</h2>
-        <button className="pp-text-button" onClick={onReset}>
+        <button type="button" className="tx pp-text-button" onClick={onReset}>
           Wyczyść
         </button>
       </div>

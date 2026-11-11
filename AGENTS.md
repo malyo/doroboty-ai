@@ -24,18 +24,18 @@ FEATURES.md describes current behavior, not a roadmap. Update it in the same cha
 
 ## Required design system
 
-For every new or changed screen, use [Poster People project instructions](docs/design-system/README.md). Read that guide, [design.md](docs/design-system/agent-kit/design.md), [component API](docs/design-system/agent-kit/components/API.md), and the relevant [human reference](docs/design-system/agent-kit/reference/components.md) before choosing styles or layout. Read the [host implementation rules](docs/design-system/IMPLEMENTATION.md) and [application acceptance checklist](docs/design-system/VERIFICATION.md) as required companions. [GUI.md](GUI.md) is the short entry point. This is the required visual direction; the previous theme guidance has been removed.
+For every new or changed screen, use the **Instrument** direction from the project skill [.claude/skills/doroboty-instrument-ui/SKILL.md](.claude/skills/doroboty-instrument-ui/SKILL.md). Read its [design.md](.claude/skills/doroboty-instrument-ui/design.md), the matching recipe in [references/screen-recipes.md](.claude/skills/doroboty-instrument-ui/references/screen-recipes.md) and, for color or type decisions, [references/visual-system.md](.claude/skills/doroboty-instrument-ui/references/visual-system.md). [GUI.md](GUI.md) is the short entry point and maps the system onto this app.
 
-Use the complete local kit in docs/design-system/agent-kit as the source for typography, colors, radii, anatomy, responsive composition and states. Adapt it to this project's React/TypeScript/Vite and existing Base UI primitives. Keep the `render` API, hash routes, domain data and persistent local flows. Do not import the example controllers, fixtures, body reset or string renderer into product React code. Current application styles are implementation to adapt within the active task scope, not another approved visual target. Installing documentation does not itself convert the running UI.
+The Instrument class API lives in src/app/instrument.css (enabled by `class="ins"` on `<body>`); host mapping is in tokens.css and src/app/instrument-host.css. Adapt it to this project's React/TypeScript/Vite and existing Base UI primitives; keep the `render` API, hash routes, domain data and persistent local flows. Orange is only the one main action of a screen (`Button variant="action"`), green only means "available", errors are crimson with "!". Bundle fonts locally; no remote runtime dependencies.
 
-Run `npm run design-system:dev` for the reference catalog/listing/offer (port 8952) and `npm run design-system:check` for integrity and example checks. No extra package installation is needed for the kit. Use local bundled Geist Serif/illustration assets; no remote runtime dependencies. Keep the kit immutable and implement product changes in src/ and the host token layer. Follow the guide's desktop/mobile, long-content, keyboard/state and integration checks; the reference's verification report does not verify a new screen.
+Poster People (docs/design-system/) is the previous direction. Keep docs/design-system/agent-kit immutable as history (`npm run design-system:check` still verifies it), but do not use it for new UI.
 
 ## Standards
 
 - Code, comments and authored engineering documentation are English; end-user UI and canonical AIPH source wording are Polish.
 - Use npm, Node.js 24 and package-lock.json. No second package manager.
 - Features belong in src/features; src/components/ui contains shared Base UI primitives.
-- For UI changes follow GUI.md and docs/design-system/README.md; use the accepted Poster People design system with the existing Base UI components and render composition API. Do not restore the removed theme guides or require global design skills.
+- For UI changes follow GUI.md and the project skill doroboty-instrument-ui; use the Instrument design system with the existing Base UI components and render composition API.
 - Use React Router hash routes.
 - Never log private free text or introduce secrets into the frontend.
 

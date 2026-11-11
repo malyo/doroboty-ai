@@ -6,6 +6,13 @@ export const categoryLabels: Record<JobCategory, string> = {
   lead: "Lead",
 };
 
+/** Instrument segments are marked by shape, never colour: ▲ Build, ● Apply, ■ Lead. */
+export const categorySigns: Record<JobCategory, string> = {
+  build: "▲",
+  apply: "●",
+  lead: "■",
+};
+
 export const functionLabels = {
   product: "Product",
   engineering: "Engineering",

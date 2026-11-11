@@ -1,3 +1,5 @@
+> **Status (2026-11-11): superseded.** The running application now uses the **Instrument** direction from the project skill [`.claude/skills/doroboty-instrument-ui`](../../.claude/skills/doroboty-instrument-ui/SKILL.md); see [GUI.md](../../GUI.md). This directory documents the previous Poster People adoption. The agent kit stays immutable as history and is still verified by `npm run design-system:check`. Do not use it for new UI.
+
 # DoRoboty.ai design system — project instructions
 
 **Poster People v1.0.0 is the required visual reference for new and changed screens.** It is the accepted rounded, illustrated listing/offer system with Geist Serif headings. Use this directory before choosing page composition, typography, color or component treatment. The previous theme guidance has been removed at Wojtek's request.

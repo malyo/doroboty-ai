@@ -37,7 +37,14 @@ export function RecruitingApplication({ application }: { application: Applicatio
                 {availableStages.map((stage) => (
                   <Button
                     key={stage}
-                    variant={stage === "rejected" ? "outline" : "default"}
+                    // The forward step is the screen's one main action (orange .cta).
+                    variant={
+                      stage === "rejected"
+                        ? "outline"
+                        : stage === availableStages.find((x) => x !== "rejected")
+                          ? "action"
+                          : "default"
+                    }
                     onClick={() => {
                       if (run({ type: "stage", applicationId: application.id, stage, note })) {
                         setNote("");

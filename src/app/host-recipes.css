@@ -1,4 +1,4 @@
-/* Shared host recipes for screens outside the canonical marketplace. */
+/* Shared host recipes for screens outside the canonical marketplace (Instrument roles). */
 h1,
 h2,
 h3,
@@ -8,25 +8,29 @@ h6,
 [data-slot="dialog-title"],
 [data-slot="alert-dialog-title"] {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 500;
   font-synthesis: none;
+  color: var(--ink);
   min-width: 0;
   overflow-wrap: anywhere;
 }
+/* .t-h1: DM Mono 500, 52 px / 1.05, -0.04em (mobile 32 px). */
 h1 {
   font-size: 52px;
-  line-height: 1.06;
-  letter-spacing: -1.5px;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
 }
+/* .t-sec: DM Mono 500, 28 px / 1.15, -0.03em (mobile 22 px). */
 h2 {
-  font-size: 32px;
-  line-height: 1.2;
-  letter-spacing: -0.8px;
+  font-size: 28px;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
 }
+/* Sub-section titles stay in the title voice, one step below .t-sec. */
 h3 {
-  font-size: 26px;
+  font-size: 22px;
   line-height: 1.2;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.03em;
 }
 body {
   letter-spacing: 0;
@@ -36,35 +40,43 @@ button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 3px solid var(--gui-focus);
-  outline-offset: 4px;
+  outline: 2px solid var(--gui-focus);
+  outline-offset: 2px;
 }
+/* Wordmark: DM Mono 500, 13 px, uppercase, .ai muted (C01). */
 .brand {
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: 700;
-  letter-spacing: -1.2px;
+  font-family: var(--f-mono, "DM Mono", monospace);
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 .brand-mark {
-  border: 1px solid var(--foreground);
-  border-radius: 10px;
+  border: 1px solid var(--ink);
+  border-radius: 0;
 }
+/* Global navigation is light, translucent and quiet; it is never a contrast point. */
 header:has([aria-label="Główna nawigacja"]) {
-  background: #fff;
+  background: rgba(252, 252, 252, 0.75);
   backdrop-filter: none;
+  border-bottom: 1px solid var(--frame);
 }
 header:has([aria-label="Główna nawigacja"]) > div {
-  height: 80px;
-  max-width: 1280px;
-  padding-inline: 40px;
+  height: 64px;
+  max-width: none;
+  padding-inline: var(--gutter, 48px);
 }
 header a[aria-label="DoRoboty.ai — strona główna"] {
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: -1.7px;
+  font-family: var(--f-mono, "DM Mono", monospace);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   line-height: 1;
 }
 footer {
-  background: #fff;
+  background: var(--surface);
+  border-top: 1px solid var(--frame);
 }
 .home-intro > div {
   max-width: 1280px;
@@ -72,14 +84,9 @@ footer {
   padding-block: 64px;
 }
 .home-intro h1 {
-  font-size: 72px;
-  line-height: 1.02;
-  letter-spacing: -2.5px;
-}
-.people-art {
-  width: 100%;
-  max-width: 420px;
-  justify-self: center;
+  font-size: 52px;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
 }
 .prototype-section {
   max-width: 1280px;
@@ -89,17 +96,17 @@ footer {
 .metric-card,
 .visitors-card,
 .success-panel {
-  border-radius: 24px;
-  background: #fff;
+  border-radius: 0;
+  background: var(--surface);
 }
 .prototype-panel h2 {
   margin-bottom: 12px;
 }
 .prototype-form {
-  padding: 28px;
-  background: #fff;
-  border: 1px solid var(--foreground);
-  border-radius: 24px;
+  padding: var(--s6, 32px);
+  background: var(--surface);
+  border: 1px solid var(--frame);
+  border-radius: 0;
   width: 100%;
   box-shadow: none;
 }
@@ -111,134 +118,125 @@ footer {
   font-size: 14px;
   line-height: 1.6;
 }
+/* Field labels: Departure Mono 11 px uppercase (C17). */
 .field > span:first-child {
-  font-weight: 600;
+  font: 400 11px/1.3 var(--gui-font-label);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--mute);
 }
+/* Notices carry no colour: framed surface with ink rule. */
 .prototype-notice {
-  background: #ffe0f7;
-  border: 1px solid var(--foreground);
-  border-radius: 18px;
+  background: var(--surface);
+  border: 1px solid var(--frame);
+  border-left: 2px solid var(--ink);
+  border-radius: 0;
   line-height: 1.6;
 }
 .prototype-error,
 .error-message {
-  border: 1px solid var(--gui-error);
+  border: 1px solid var(--alert);
+  border-left-width: 4px;
 }
 .nav-active,
 .nav-active:hover {
-  background: #181818;
+  background: var(--ink);
   color: #fff;
 }
 .sidebar,
 .topbar {
-  background: #fff;
+  background: var(--surface);
 }
 .workspace-label {
   padding-block: 24px;
 }
 .workspace-avatar {
-  background: #ffe0f7;
-  border-radius: 10px;
+  background: transparent;
+  border: 1px solid var(--frame);
+  font-family: var(--f-mono, "DM Mono", monospace);
+  border-radius: 0;
   flex-shrink: 0;
 }
 .main-content {
-  padding: 40px;
+  padding: var(--s7, 48px);
 }
 .topbar {
-  min-height: 72px;
+  min-height: 64px;
 }
 .page-heading {
   padding-block: 8px 20px;
-  border-bottom: 1px solid #d8d5d1;
+  border-bottom: 1px solid var(--frame);
 }
 .page-heading h1 {
   font-size: 52px;
 }
 .native-select {
-  border: 1px solid var(--foreground);
+  border: 1px solid var(--frame);
 }
 [data-slot="select-trigger"] {
   box-shadow: var(--gui-edge-shadow);
 }
 [data-slot="checkbox"] {
-  border-radius: 5px;
+  border-radius: 0;
   box-shadow: var(--gui-edge-shadow);
 }
 [data-slot="badge"] {
-  box-shadow: inset 0 0 0 1px #d8d5d1;
   white-space: normal;
 }
 [data-slot="dialog-content"],
 [data-slot="alert-dialog-content"] {
-  border: 1px solid #181818;
+  border: 1px solid var(--frame);
+  box-shadow: none;
 }
-@media (max-width: 1100px) {
-  .home-intro h1 {
-    font-size: 58px;
-  }
-}
-@media (max-width: 850px) {
-  .home-intro h1 {
-    font-size: 52px;
-  }
-}
-@media (max-width: 600px) {
+@media (max-width: 760px) {
   h1,
-  .page-heading h1 {
-    font-size: 38px;
+  .page-heading h1,
+  .home-intro h1 {
+    font-size: 32px;
+    letter-spacing: -0.035em;
+  }
+  h2 {
+    font-size: 22px;
+  }
+  h3 {
+    font-size: 19px;
   }
   header:has([aria-label="Główna nawigacja"]) > div {
-    height: 72px;
-    padding-inline: 18px;
-  }
-  header a[aria-label="DoRoboty.ai — strona główna"] {
-    font-size: 25px;
+    height: 64px;
+    padding-inline: 16px;
   }
   .main-content {
-    padding: 24px 18px;
+    padding: var(--s5, 24px) 16px;
   }
   .prototype-section {
-    padding-inline: 18px;
+    padding-inline: 16px;
   }
   .prototype-form {
-    padding: 20px;
+    padding: var(--s5, 24px);
   }
   .home-intro > div {
-    gap: 28px;
-    padding-block: 36px;
-  }
-  .home-intro h1 {
-    font-size: 43px;
-  }
-  .people-art {
-    max-width: 230px;
+    gap: var(--s5, 24px);
+    padding-block: var(--s7, 48px);
   }
 }
 
-/* Host score facts share one readable treatment across lists and detail views. */
+/* Score facts are neutral data: DM Mono number in a framed rectangle. Colour never carries the band;
+   the top band gets an ink frame (like .badge.warn), the rest the default frame. Orange and green stay reserved. */
 .match-score {
   display: inline-flex;
   align-items: center;
   max-width: 100%;
-  padding: 3px 12px;
-  border-radius: 18px;
-  color: var(--gui-text);
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.6;
-}
-.match-score[data-score-band="red"] {
-  background: var(--gui-match-red);
-}
-.match-score[data-score-band="orange"] {
-  background: var(--gui-match-orange);
-}
-.match-score[data-score-band="yellow"] {
-  background: var(--gui-match-yellow);
+  padding: 4px 8px;
+  border: 1px solid var(--frame);
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  font: 400 14px/1.4 var(--gui-font-data);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 .match-score[data-score-band="green"] {
-  background: var(--gui-match-green);
+  border-color: var(--ink);
 }
 
 /* C13 context returns share one anatomy across public and workspace screens. */
@@ -249,10 +247,10 @@ footer {
   min-height: 36px;
   max-width: 100%;
   font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 400;
+  font-size: 14px;
+  font-weight: 500;
   line-height: 1.5;
-  color: var(--gui-text);
+  color: var(--mute);
 }
 .back-link svg {
   width: 17px;
@@ -282,7 +280,7 @@ footer {
   position: absolute;
   width: 6px;
   height: 10px;
-  border-radius: 1px;
+  border-radius: 0;
   animation: confetti-burst 850ms ease-out both;
 }
 .confetti-burst span:nth-child(3n) {

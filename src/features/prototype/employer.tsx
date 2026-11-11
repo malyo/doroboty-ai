@@ -11,11 +11,19 @@ import {
   remoteLabels,
   seniorityLabels,
   contractLabels,
+  categorySigns,
 } from "@/features/jobs/presentation";
 import { currentPerson, jobSchema } from "./model";
 import { usePrototype } from "./store";
 import { Field } from "./workspace";
 import { Empty, NotFound, PageTitle } from "./shell";
+
+/** Instrument C05 columns for the employer's own offers. */
+const employerJobColumns = {
+  "--cols": "minmax(240px,1fr) 100px 110px 150px 120px",
+  "--areas": '"who seg rate stat go"',
+  "--areas-m": '"seg seg stat" "who who who" "rate rate go"',
+} as React.CSSProperties;
 
 export function EmployerJobs() {
   const { state } = usePrototype();
@@ -25,43 +33,52 @@ export function EmployerJobs() {
     <>
       <PageTitle
         action={
-          <Link to="/app/oferty/nowa" className={buttonVariants()}>
+          <Link to="/app/oferty/nowa" className={buttonVariants({ variant: "action" })}>
             Dodaj ofertę
           </Link>
         }
       >
         Moje oferty
       </PageTitle>
-      <div className="space-y-4">
-        {jobs.length ? (
-          jobs.map((job) => (
-            <article key={job.id} className="prototype-panel">
-              <div className="flex flex-wrap justify-between gap-4">
-                <div>
-                  <Link
-                    className="text-xl font-semibold text-[var(--gui-link)]"
-                    to={`/app/oferty/${job.id}`}
-                  >
-                    {job.title}
-                  </Link>
-                  <p className="mt-3 text-muted-foreground">
-                    {state.applications.filter((x) => x.jobId === job.id).length} aplikacji ·{" "}
-                    {job.publicationStatus === "published" ? "Opublikowana" : "Szkic"}
-                  </p>
-                </div>
-                <Link
-                  to={`/oferty/${job.slug}`}
-                  className={buttonVariants({ variant: "outline", size: "sm" })}
-                >
-                  Zobacz ofertę
-                </Link>
+      {jobs.length ? (
+        <div className="list record-list" style={employerJobColumns}>
+          <div className="thead" aria-hidden="true">
+            <span>Oferta</span>
+            <span>Segment</span>
+            <span>Zgłoszenia</span>
+            <span>Stan</span>
+            <span />
+          </div>
+          {jobs.map((job) => (
+            <article key={job.id} className="row">
+              <div className="who">
+                <h2 className="t-name">
+                  <Link to={`/app/oferty/${job.id}`}>{job.title}</Link>
+                </h2>
+                <span className="t-meta">
+                  {job.locations.join(" / ")} · {remoteLabels[job.remoteStatus]}
+                </span>
               </div>
+              <span className="seg">
+                {categorySigns[job.category]} {categoryLabels[job.category]}
+              </span>
+              <span className="t-data rate" data-label="Zgłoszenia:">
+                {state.applications.filter((x) => x.jobId === job.id).length}
+              </span>
+              <span className="stat">
+                <span className={job.publicationStatus === "published" ? "badge" : "badge off"}>
+                  {job.publicationStatus === "published" ? "Opublikowana" : "Szkic"}
+                </span>
+              </span>
+              <Link className="tx public-link" to={`/oferty/${job.slug}`}>
+                Zobacz ofertę
+              </Link>
             </article>
-          ))
-        ) : (
-          <Empty>Nie masz jeszcze ofert. Dodaj pierwszą ofertę.</Empty>
-        )}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <Empty>Nie masz jeszcze ofert. Dodaj pierwszą ofertę.</Empty>
+      )}
     </>
   );
 }
@@ -265,7 +282,7 @@ export function EmployerJobEditor() {
             {error}
           </p>
         )}
-        <Button type="submit" disabled={!approved}>
+        <Button type="submit" variant="action" disabled={!approved}>
           Opublikuj ofertę
         </Button>
       </form>
@@ -299,7 +316,9 @@ export function CompanyEditor() {
         <Field label="Opis firmy">
           <Textarea name="description" maxLength={12000} defaultValue={company.description} />
         </Field>
-        <Button type="submit">Zapisz dane firmy</Button>
+        <Button type="submit" variant="action">
+          Zapisz dane firmy
+        </Button>
         {message && <p role="status">{message}</p>}
         <Link className="text-[var(--gui-link)]" to={`/firmy/${company.slug}`}>
           Zobacz profil firmy
