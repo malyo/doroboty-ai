@@ -28,6 +28,10 @@ Open http://127.0.0.1:3001. No environment file, account, database or additional
 
 Select Anna or Marek as a candidate, Karolina or Tomasz as an employer, or the instructor. Publish a job, apply, switch person and record the employer decision. Changes survive reload in this browser; settings provide export, import and reset. AI and scores simulate prepared scenarios. Use example CVs only.
 
+## Research prototypes (EXP1–EXP3)
+
+Open http://127.0.0.1:3001/#/badanie for the facilitator panel: task paths for the shortened application list (EXP1), status and assurance (EXP2) and salary range with candidate conditions (EXP3), a recruiter/candidate view switch, candidate scenarios and an event log you can export as JSON or CSV after each session. Data is fictional and stays in this browser.
+
 ## Build and verify
 
 ```sh

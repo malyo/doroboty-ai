@@ -10,6 +10,7 @@
 @import "./application.css";
 @import "./interactions.css";
 @import "./instrument-host.css";
+@import "./research.css";
 
 @theme inline {
   --color-background: var(--background);

@@ -1,0 +1,495 @@
+/* Research prototypes EXP1–EXP3 (/badanie). Built from Instrument parts; sliders, the facilitator
+   bar, form steps and the salary nudge are extrapolations (not in the studied sources). */
+
+.ins .research-area {
+  min-height: 60vh;
+}
+
+/* ---------- facilitator bar: quiet, framed, not a contrast point ---------- */
+.ins .research-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s3) var(--s5);
+  padding: var(--s3) var(--gutter);
+  background: var(--paper);
+  border-bottom: 1px dashed var(--frame);
+}
+.ins .research-bar .fpill {
+  padding: 10px 16px;
+}
+.ins .research-bar .fpill:disabled {
+  color: var(--mute);
+  cursor: not-allowed;
+}
+.ins .research-select {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+}
+.ins .research-select select {
+  font: 400 14px var(--f-sans);
+  border: 1px solid var(--frame);
+  background: var(--surface);
+  padding: 8px 10px;
+  border-radius: 0;
+}
+.ins .research-bar-end {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--s4);
+}
+
+/* ---------- page frame ---------- */
+.ins .research-page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--s6) var(--gutter) var(--s8);
+}
+.ins .research-page > .page-heading {
+  margin-bottom: var(--s5);
+}
+.ins .research-page .list {
+  padding: 0;
+}
+.ins .research-page > section > .t-sec:first-child {
+  margin-top: var(--s7);
+}
+.ins .research-page > section:first-child > .t-sec:first-child {
+  margin-top: 0;
+}
+.ins .research-hint {
+  margin: var(--s3) 0 var(--s5);
+  max-width: 72ch;
+}
+.ins .research-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s3) var(--s4);
+}
+.ins .panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+}
+.ins .panel > .cap {
+  margin: calc(-1 * var(--s6)) calc(-1 * var(--s6)) 0;
+}
+.ins .panel .field {
+  margin: 0;
+}
+.ins .field input,
+.ins .field select,
+.ins .field textarea {
+  width: 100%;
+  max-width: 560px;
+}
+.ins .field input[type="number"] {
+  max-width: 120px;
+  font-family: var(--f-mono);
+}
+.ins fieldset.field {
+  border: 0;
+  padding: 0;
+  min-width: 0;
+}
+.ins fieldset.field > legend {
+  margin-bottom: var(--s2);
+}
+.ins .choice-stack {
+  flex-direction: column;
+  align-items: flex-start;
+}
+.ins .choice-stack label + label {
+  margin: -1px 0 0;
+}
+.ins .choice-stack label {
+  width: 100%;
+  max-width: 560px;
+  white-space: normal;
+  line-height: 1.4;
+}
+.ins .option-clear {
+  margin-top: var(--s2);
+  font-size: 13px;
+}
+
+/* ---------- hub ---------- */
+.ins .research-session {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--s5);
+  align-items: start;
+}
+.ins .research-session .choice {
+  flex-direction: column;
+}
+.ins .research-session .choice label {
+  white-space: normal;
+  line-height: 1.4;
+}
+.ins .research-session .choice label + label {
+  margin: -1px 0 0;
+}
+.ins .research-session legend {
+  margin-bottom: var(--s2);
+}
+.ins .task-list .row > :nth-child(3) {
+  grid-area: stat;
+}
+.ins .task-list .row > :nth-child(4) {
+  grid-area: go;
+  justify-self: end;
+}
+.ins .scenario-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: var(--s3);
+}
+.ins .scenario-buttons .fpill {
+  padding: 10px 14px;
+  margin: 0 -1px -1px 0;
+}
+.ins .research-export {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s3);
+}
+.ins .event-list .row {
+  min-height: 0;
+  padding: var(--s3) var(--s5);
+}
+.ins .event-list .row > * {
+  grid-area: auto;
+}
+.ins .event-data {
+  overflow-wrap: anywhere;
+  font-size: 13px;
+}
+
+/* ---------- P1: shortlist ---------- */
+.ins .shortlist-controls {
+  margin-bottom: var(--s5);
+}
+.ins .range-field {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 360px) 90px;
+  align-items: center;
+  gap: var(--s4);
+}
+.ins input[type="range"] {
+  accent-color: var(--ink);
+  width: 100%;
+  min-height: 32px;
+}
+.ins .shortlist .row .top {
+  grid-area: top;
+}
+.ins .shortlist .row .score,
+.ins .review-list .row .score {
+  grid-area: score;
+}
+.ins .review-list .row .cond {
+  grid-area: cond;
+}
+.ins .show-rest {
+  margin-top: -1px;
+  justify-content: center;
+}
+.ins .research-done {
+  max-width: 760px;
+}
+.ins .research-done .t-sec {
+  margin: 0;
+}
+.ins .research-done-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+}
+.ins .research-done-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s3) 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+/* ---------- P2 ---------- */
+.ins .waiting-list .row > :nth-child(2),
+.ins .status-question .row > :nth-child(2) {
+  grid-area: wait;
+}
+.ins .waiting-list .row > :nth-child(3),
+.ins .status-question .row > :nth-child(3) {
+  grid-area: cond;
+}
+.ins .row-actions {
+  grid-area: act;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+  justify-self: end;
+}
+.ins .impatience {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s1);
+}
+.ins .row.sl .impatience .t-meta {
+  color: var(--console-mute);
+}
+.ins .kv.conditions {
+  margin: 0;
+}
+.ins .kv.conditions dt,
+.ins .kv.conditions dd {
+  padding: 6px 0;
+  font-size: 13px;
+}
+.ins .kv.conditions dt {
+  padding-top: 8px;
+}
+.ins .row.sl .kv.conditions dt {
+  color: var(--console-mute);
+}
+.ins .row.sl .kv.conditions dt,
+.ins .row.sl .kv.conditions dd {
+  border-color: var(--console-line);
+}
+.ins .conditions-range {
+  display: block;
+  font-size: 12px;
+  color: var(--mute);
+}
+.ins .status-question {
+  margin-bottom: var(--s6);
+}
+.ins .status-question .t-sec {
+  margin-top: 0;
+}
+.ins .status-compose {
+  margin-bottom: var(--s5);
+  max-width: 820px;
+}
+.ins .reason-chips {
+  margin-top: var(--s2);
+}
+.ins .reason-chips .fpill {
+  padding: 8px 12px;
+  font-size: 13px;
+  white-space: normal;
+  text-align: left;
+}
+.ins .message-preview {
+  margin: 0;
+  background: var(--paper);
+}
+.ins .message-preview p {
+  margin: var(--s2) 0 0;
+  max-width: 68ch;
+}
+.ins .reminder-form {
+  max-width: 820px;
+}
+.ins .reminder-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  font-weight: 600;
+}
+.ins .candidate-status {
+  margin-top: var(--s5);
+  max-width: 820px;
+}
+.ins .candidate-status .t-body {
+  margin: 0;
+}
+.ins .candidate-next {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s3) var(--s4);
+  margin-top: var(--s5);
+}
+.ins .candidate-next > .t-meta {
+  flex-basis: 100%;
+  margin: 0;
+}
+
+/* ---------- P3 ---------- */
+.ins .form-steps {
+  display: flex;
+  list-style: none;
+  margin: 0 0 var(--s5);
+  padding: 0;
+}
+.ins .form-steps li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+  padding: var(--s3) var(--s4);
+  border: 1px solid var(--frame);
+  background: var(--surface);
+  color: var(--mute);
+  min-width: 0;
+  flex: 1;
+}
+.ins .form-steps li + li {
+  margin-left: -1px;
+}
+.ins .form-steps li[aria-current="step"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+  position: relative;
+}
+.ins .form-steps li[aria-current="step"] .t-label {
+  color: var(--console-mute);
+}
+.ins .salary-step {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: var(--s5);
+  align-items: start;
+}
+.ins .salary-step > .panel:nth-of-type(2),
+.ins .salary-step > .actbar {
+  grid-column: 1 / -1;
+}
+.ins .salary-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr 160px;
+  gap: var(--s4);
+}
+.ins .salary-fields input {
+  font-family: var(--f-mono);
+}
+.ins .market-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s2);
+  padding: var(--s4);
+  border: 1px solid var(--rule);
+  background: var(--paper);
+}
+.ins .market-hint p {
+  margin: 0;
+}
+.ins .salary-warning {
+  margin: 0;
+  padding: var(--s3) var(--s4);
+  border: 1px solid var(--frame);
+  border-left: 2px solid var(--ink);
+  background: var(--surface);
+  font-size: 14px;
+}
+.ins .later-prompt {
+  padding: var(--s4);
+  border: 1px solid var(--ink);
+}
+.ins .later-prompt p {
+  margin: 0 0 var(--s3);
+}
+.ins .salary-fig {
+  margin: 0;
+}
+.ins .bars {
+  display: grid;
+  gap: var(--s4);
+}
+.ins .bars > div {
+  display: grid;
+  grid-template-columns: 110px 1fr 40px;
+  align-items: center;
+  gap: var(--s3);
+}
+.ins .bar {
+  display: block;
+  height: 12px;
+  background: var(--ink);
+}
+.ins .bar-muted {
+  background: var(--chip);
+}
+.ins .job-preview {
+  max-width: 820px;
+}
+.ins .job-preview .t-sec {
+  margin: 0;
+}
+.ins .detail-columns {
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  gap: var(--s5);
+  align-items: start;
+}
+.ins .applied-job .t-sec {
+  margin: 0;
+  font-size: 22px;
+}
+
+@media (max-width: 860px) {
+  .ins .salary-step,
+  .ins .detail-columns {
+    grid-template-columns: 1fr;
+  }
+  .ins .salary-fields {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 760px) {
+  .ins .research-bar-end {
+    margin-left: 0;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .ins .range-field {
+    grid-template-columns: 1fr auto;
+  }
+  .ins .range-field input {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  .ins .form-steps li span:not(.t-label) {
+    display: none;
+  }
+  .ins .row-actions {
+    justify-self: start;
+  }
+  .ins .event-list .row {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: none;
+  }
+}
+
+/* Long text in key-value facts reads left-aligned; short facts stay right-aligned (C12). */
+.ins .candidate-status .kv dd,
+.ins .applied-job .kv dd,
+.ins .job-preview .kv dd,
+.ins .research-done .kv dd {
+  text-align: left;
+}
+.ins .candidate-status .kv,
+.ins .applied-job .kv,
+.ins .job-preview .kv,
+.ins .research-done .kv {
+  grid-template-columns: 160px 1fr;
+  column-gap: var(--s4);
+}
+.ins fieldset:disabled .choice label,
+.ins select:disabled,
+.ins textarea:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.ins .form-steps {
+  scroll-margin-top: calc(64px + var(--s4));
+}

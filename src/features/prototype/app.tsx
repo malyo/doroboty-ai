@@ -17,6 +17,19 @@ import {
 import { EmployerJobs, EmployerJobEditor, CompanyEditor } from "./employer";
 import { SettingsPage, PrivacyPage } from "./settings";
 import { CasePage } from "./case";
+import { ResearchLayout } from "@/features/research/components";
+import { ResearchHub } from "@/features/research/hub";
+import { ShortlistPage } from "@/features/research/p1";
+import {
+  CandidateStatusPage,
+  RecruiterStatusPage,
+  ReminderSettingsPage,
+} from "@/features/research/p2";
+import {
+  CandidateConditionsPage,
+  ConditionsReviewPage,
+  JobSalaryFormPage,
+} from "@/features/research/p3";
 function AppRoutes() {
   return (
     <Routes>
@@ -142,6 +155,17 @@ function AppRoutes() {
           }
         />
         <Route path="app/settings" element={<SettingsPage />} />
+        {/* Research prototypes EXP1–EXP3 (facilitated tests; local data and event log only). */}
+        <Route path="badanie" element={<ResearchLayout />}>
+          <Route index element={<ResearchHub />} />
+          <Route path="p1/:job/:variant" element={<ShortlistPage />} />
+          <Route path="p2/rekruter" element={<RecruiterStatusPage />} />
+          <Route path="p2/przypomnienia" element={<ReminderSettingsPage />} />
+          <Route path="p2/kandydat" element={<CandidateStatusPage />} />
+          <Route path="p3/ogloszenie" element={<JobSalaryFormPage />} />
+          <Route path="p3/warunki" element={<CandidateConditionsPage />} />
+          <Route path="p3/zgloszenia" element={<ConditionsReviewPage />} />
+        </Route>
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
