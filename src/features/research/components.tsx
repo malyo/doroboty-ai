@@ -1,13 +1,5 @@
 import { useEffect, useRef } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router";
-import {
-  availabilityLabels,
-  bandLabels,
-  responseTimeDays,
-  responseTimeLabels,
-  workModeLabels,
-  type CandidateConditions,
-} from "./data";
 import { ResearchProvider, useResearch, type P2Scenario } from "./store";
 import { plural } from "@/lib/plural";
 
@@ -116,63 +108,7 @@ export function useScreenOpen(prototype: "P1" | "P2" | "P3" | "HUB", screen: str
   }, [log, prototype, screen]);
 }
 
-/** How long the candidate waits compared with how fast they expect an answer. */
-export function Impatience({
-  conditions,
-  ageDays,
-}: {
-  conditions: CandidateConditions;
-  ageDays: number;
-}) {
-  const expected = conditions.responseTime ? responseTimeDays[conditions.responseTime] : undefined;
-  const over = expected !== undefined && ageDays > expected;
-  return (
-    <span className="impatience">
-      <span className="t-data">
-        {ageDays} {plural(ageDays, "dzień", "dni", "dni")}
-      </span>
-      <span className="t-meta">
-        {conditions.responseTime
-          ? `oczekuje: ${responseTimeLabels[conditions.responseTime].toLocaleLowerCase("pl")}`
-          : "oczekiwanie: —"}
-      </span>
-      {over && <span className="badge warn">Czas minął</span>}
-    </span>
-  );
-}
-
-/** Shared view of candidate conditions (EXP2 recruiter list and EXP3 review). */
-export function ConditionsList({
-  conditions,
-  bandRange,
-}: {
-  conditions: CandidateConditions;
-  bandRange?: Partial<Record<"low" | "mid" | "high", string>>;
-}) {
-  const fmt = new Intl.NumberFormat("pl-PL");
-  const band = conditions.band;
-  return (
-    <dl className="kv conditions">
-      <dt>Min. wynagrodzenie</dt>
-      <dd className="t-data">
-        {conditions.minSalary ? `${fmt.format(conditions.minSalary)} zł` : "—"}
-      </dd>
-      <dt>Tryb pracy</dt>
-      <dd>{conditions.workMode ? workModeLabels[conditions.workMode] : "—"}</dd>
-      <dt>Dostępność</dt>
-      <dd>{conditions.availability ? availabilityLabels[conditions.availability] : "—"}</dd>
-      <dt>Odpowiedź do</dt>
-      <dd>{conditions.responseTime ? responseTimeLabels[conditions.responseTime] : "—"}</dd>
-      <dt>Część widełek</dt>
-      <dd>
-        {band ? bandLabels[band] : "—"}
-        {band && band !== "none" && bandRange?.[band] && (
-          <span className="t-data conditions-range"> {bandRange[band]}</span>
-        )}
-      </dd>
-    </dl>
-  );
-}
+export { ConditionsList, Impatience } from "@/features/applications/conditions";
 
 export const counter = (n: number) => String(n).padStart(2, "0");
 

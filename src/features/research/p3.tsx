@@ -19,6 +19,7 @@ import {
   type WorkMode,
 } from "./data";
 import { ConditionsList, formatDateTime, useScreenOpen } from "./components";
+import { OptionGroup } from "@/features/applications/conditions";
 import { useResearch, type P3Job } from "./store";
 
 const processOptions = [
@@ -609,46 +610,6 @@ export function CandidateConditionsPage() {
         </form>
       </div>
     </div>
-  );
-}
-
-function OptionGroup<T extends string>({
-  legend,
-  name,
-  value,
-  onChange,
-  options,
-  stack = false,
-}: {
-  legend: string;
-  name: string;
-  value: T | "";
-  onChange: (value: T | "") => void;
-  options: Record<T, string>;
-  stack?: boolean;
-}) {
-  return (
-    <fieldset className="field">
-      <legend className="t-label">{legend}</legend>
-      <div className={stack ? "choice choice-stack" : "choice"}>
-        {(Object.entries(options) as [T, string][]).map(([key, label]) => (
-          <label key={key}>
-            <input
-              type="radio"
-              name={name}
-              checked={value === key}
-              onChange={() => onChange(key)}
-            />
-            {label}
-          </label>
-        ))}
-      </div>
-      {value && (
-        <button type="button" className="tx option-clear" onClick={() => onChange("")}>
-          Wyczyść wybór
-        </button>
-      )}
-    </fieldset>
   );
 }
 

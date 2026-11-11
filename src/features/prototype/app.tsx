@@ -17,6 +17,7 @@ import {
 import { EmployerJobs, EmployerJobEditor, CompanyEditor } from "./employer";
 import { SettingsPage, PrivacyPage } from "./settings";
 import { CasePage } from "./case";
+import { EmployerCandidatesPage } from "@/features/applications/employer-candidates";
 import { ResearchLayout } from "@/features/research/components";
 import { ResearchHub } from "@/features/research/hub";
 import { ShortlistPage } from "@/features/research/p1";
@@ -134,7 +135,7 @@ function AppRoutes() {
           path="app/kandydaci"
           element={
             <RequireRole role="employer">
-              <ApplicationsPage employer />
+              <EmployerCandidatesPage />
             </RequireRole>
           }
         />

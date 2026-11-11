@@ -30,3 +30,13 @@ Add clickable prototypes for the brief "Prototypy EXP1, EXP2, EXP3" (version 3, 
 - Browser walk-through at 1440 px of every path; all research routes at 390 px without horizontal scroll.
 
 Not verified: real participant sessions, screen reader output, Safari/Firefox.
+
+## Product integration (follow-up, branch `produkt-exp1-3`)
+
+The user asked to keep `/badanie` and also implement the functionality in the base product.
+
+- Model (`src/features/prototype/model.ts`): optional `conditions` and `updates` on applications, optional `salaryLater`, `firstProject`, `mandate`, `processForm` on jobs and `reminder` on companies, so existing saves and imports stay valid (version 1). New actions: `invite` (up to 3, submitted → reviewed → interview_invited), `still_considering`, `status_message` (reason ≥ 10 chars, next contact today or later), `ask_status` (7 days after applying and after the previous question), `answer_status` ("Rezygnujemy" rejects), `reminder`.
+- Shared code in `src/features/applications/`: `conditions.tsx` (labels, `ConditionsList`, `Impatience`, `OptionGroup`, used by `/badanie` too), `conditions-fields.tsx`, `status.tsx`, `employer-candidates.tsx`; `src/features/jobs/salary-scope-fields.tsx`; styles in `src/app/recruiting-status.css`.
+- Screens: employer candidates list (EXP1 + EXP2), employer application record (conditions, question, updates), organization page (reminders), job editor (EXP3 salary step), candidate application form (conditions) and record (status panel), public offer (role scope).
+- The marketplace has only two candidate personas, so the shortened list shows few rows in the product; the 40-application lists stay in `/badanie`.
+- Tests: `src/features/prototype/exp.test.ts` (4 model tests) and `tests/e2e/product-exp.spec.ts` (3 journeys); the publish journey now clicks "Dodam później".

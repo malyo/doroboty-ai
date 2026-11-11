@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ApplicationRecord } from "./application-record";
+import { EmployerStatusPanel } from "@/features/applications/status";
 import { nextStages, stageLabels, type Application } from "./model";
 import { usePrototype } from "./store";
 
@@ -27,6 +28,12 @@ export function RecruitingApplication({ application }: { application: Applicatio
         application={application}
         companyName={company?.name ?? ""}
         audience="employer"
+        status={
+          <EmployerStatusPanel
+            application={application}
+            job={state.jobs.find((x) => x.id === application.jobId)}
+          />
+        }
         history={application.events}
         statusRef={statusRef}
         footer={

@@ -1,0 +1,113 @@
+/* Product integration of EXP1–EXP3: shortened candidate list, status panels, candidate conditions
+   and the salary/scope step. Shared pieces (sliders, message form, market hint, figure) are styled
+   in research.css and reused here. */
+
+.ins .candidates-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: var(--s4);
+  margin-bottom: var(--s5);
+}
+.ins .candidates-filters .field input,
+.ins .candidates-filters .field select {
+  max-width: none;
+}
+.ins .candidates-list .row .top {
+  grid-area: top;
+}
+.ins .candidates-list .row .wait {
+  grid-area: wait;
+}
+.ins .candidates-list .row .row-actions,
+.ins .candidates-list .row .chk {
+  position: relative;
+  z-index: 1;
+}
+.ins .status-compose,
+.ins .shortlist-controls {
+  margin-bottom: var(--s5);
+}
+
+/* ---------- status panel on the application record ---------- */
+.ins .status-panel {
+  margin: var(--s5) 0 var(--s6);
+}
+.ins .status-panel > .t-sec {
+  margin: 0 0 var(--s4);
+}
+.ins .status-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--s5);
+  align-items: start;
+}
+.ins .status-updates {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+}
+.ins .status-updates li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s1);
+  padding: var(--s3) 0;
+  border-bottom: 1px solid var(--rule);
+}
+.ins .status-updates p {
+  margin: 0;
+  max-width: 68ch;
+}
+.ins .status-question-box {
+  padding: var(--s4);
+  border: 1px solid var(--ink);
+}
+.ins .status-question-box p {
+  margin: 0 0 var(--s3);
+}
+.ins .status-facts {
+  margin: var(--s4) 0 0;
+  grid-template-columns: 180px 1fr;
+  column-gap: var(--s4);
+}
+.ins .status-facts dd {
+  text-align: left;
+}
+
+/* ---------- application form: conditions ---------- */
+.ins .application-conditions {
+  border: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+}
+.ins .application-conditions h3 {
+  margin: 0;
+}
+.ins .application-conditions .field input,
+.ins .application-conditions .field select {
+  max-width: 320px;
+}
+
+/* ---------- job editor: salary and scope ---------- */
+.ins .salary-scope {
+  margin: var(--s4) 0;
+}
+.ins .salary-scope > .t-sec {
+  margin: var(--s5) 0 var(--s4);
+}
+.ins .salary-scope .salary-fields {
+  grid-template-columns: 1fr 1fr;
+}
+/* The job editor form is narrow (850px), so the salary step stacks in one column there. */
+.ins .prototype-form .salary-scope .salary-step {
+  grid-template-columns: 1fr;
+}
+
+@media (max-width: 860px) {
+  .ins .status-columns,
+  .ins .candidates-filters {
+    grid-template-columns: 1fr;
+  }
+}

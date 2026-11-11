@@ -447,6 +447,31 @@ export function JobPage() {
           <h2 className="t-sec">O roli</h2>
           <JobDescription description={job.description} />
         </section>
+        {(job.firstProject || job.mandate || job.processForm) && (
+          <section className="pp-offer-section">
+            <h2 className="t-sec">Zakres roli</h2>
+            <dl className="spec">
+              {job.firstProject && (
+                <>
+                  <dt>Pierwszy projekt</dt>
+                  <dd>{job.firstProject}</dd>
+                </>
+              )}
+              {job.mandate && (
+                <>
+                  <dt>Mandat</dt>
+                  <dd>{job.mandate}</dd>
+                </>
+              )}
+              {job.processForm && (
+                <>
+                  <dt>Proces rekrutacji</dt>
+                  <dd>{job.processForm}</dd>
+                </>
+              )}
+            </dl>
+          </section>
+        )}
         <section className="pp-offer-employer" id="employer" tabIndex={-1}>
           <h2 className="t-sec">O firmie</h2>
           <div className="offer-company">

@@ -21,6 +21,7 @@ export function ApplicationRecord({
   statusRef,
   children,
   footer,
+  status,
 }: {
   application: Pick<
     Application,
@@ -32,6 +33,8 @@ export function ApplicationRecord({
   statusRef?: Ref<HTMLSpanElement>;
   children?: ReactNode;
   footer?: ReactNode;
+  /** EXP2/EXP3 status and conditions, shown right below the header. */
+  status?: ReactNode;
 }) {
   const candidate = audience === "candidate";
   const title = candidate ? application.jobTitle : application.candidateName;
@@ -64,6 +67,7 @@ export function ApplicationRecord({
           )}
         </div>
       </header>
+      {status}
       <div className="recruiting-layout">
         <RecordSheet
           label={candidate ? "Twoja wysłana aplikacja" : "Materiały kandydata"}

@@ -106,6 +106,10 @@ test("published job → saved offer/draft → submitted application → employer
   await page.getByRole("button", { name: "Użyj propozycji" }).click();
   await page.getByRole("checkbox").check();
   await page.getByRole("button", { name: "Opublikuj ofertę" }).click();
+  // EXP3: publishing without a salary range needs a deliberate "Dodam później".
+  await expect(page.getByRole("alert").filter({ hasText: "Nie podano widełek." })).toBeVisible();
+  await page.getByRole("button", { name: "Dodam później" }).click();
+  await page.getByRole("button", { name: "Opublikuj ofertę" }).click();
   await expect(
     page.getByRole("link", { name: "Product Designer do automatyzacji", exact: true }),
   ).toBeVisible();

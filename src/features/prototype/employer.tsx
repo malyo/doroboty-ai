@@ -17,6 +17,12 @@ import { currentPerson, jobSchema } from "./model";
 import { usePrototype } from "./store";
 import { Field } from "./workspace";
 import { Empty, NotFound, PageTitle } from "./shell";
+import { ReminderSettings } from "@/features/applications/status";
+import {
+  SalaryScopeFields,
+  marketHint,
+  type SalaryScopeValue,
+} from "@/features/jobs/salary-scope-fields";
 
 /** Instrument C05 columns for the employer's own offers. */
 const employerJobColumns = {
@@ -95,6 +101,15 @@ export function EmployerJobEditor() {
   const [generated, setGenerated] = useState(existing?.generatedDescription ?? "");
   const [approved, setApproved] = useState(false);
   const [error, setError] = useState("");
+  const [salary, setSalary] = useState<SalaryScopeValue>({
+    min: existing?.salaryMin?.toString() ?? "",
+    max: existing?.salaryMax?.toString() ?? "",
+    later: existing?.salaryLater ?? false,
+    firstProject: existing?.firstProject ?? "",
+    mandate: existing?.mandate ?? "",
+    processForm: existing?.processForm ?? "",
+  });
+  const [askLater, setAskLater] = useState(false);
   if (id !== "nowa" && !existing) return <NotFound />;
   function publish(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -104,6 +119,12 @@ export function EmployerJobEditor() {
       return;
     }
     const data = new FormData(e.currentTarget);
+    // EXP3: skipping the salary range needs a deliberate "Dodam później".
+    if (!(salary.min && salary.max) && !salary.later) {
+      setAskLater(true);
+      setError("Dodaj widełki wynagrodzenia albo wybierz „Dodam później”.");
+      return;
+    }
     const newId = existing?.id ?? crypto.randomUUID();
     const parsed = jobSchema.safeParse({
       id: newId,
@@ -120,8 +141,12 @@ export function EmployerJobEditor() {
       locations: [String(data.get("location")).trim()],
       seniority: data.get("seniority"),
       contract: data.get("contract"),
-      salaryMin: data.get("salaryMin") ? Number(data.get("salaryMin")) : undefined,
-      salaryMax: data.get("salaryMax") ? Number(data.get("salaryMax")) : undefined,
+      salaryMin: salary.min ? Number(salary.min) : undefined,
+      salaryMax: salary.max ? Number(salary.max) : undefined,
+      salaryLater: !(salary.min && salary.max) && salary.later ? true : undefined,
+      firstProject: salary.firstProject.trim() || undefined,
+      mandate: salary.mandate.trim() || undefined,
+      processForm: salary.processForm || undefined,
       salaryCurrency: existing?.salaryCurrency ?? "PLN",
       salaryPeriod: existing?.salaryPeriod ?? "month",
       salaryKind: existing?.salaryKind ?? "gross",
@@ -262,13 +287,17 @@ export function EmployerJobEditor() {
               defaultValue={existing?.locations.join(" / ") ?? "Warszawa"}
             />
           </Field>
-          <Field label="Wynagrodzenie od (PLN brutto / mies.)">
-            <Input name="salaryMin" type="number" min="0" defaultValue={existing?.salaryMin} />
-          </Field>
-          <Field label="Wynagrodzenie do (PLN brutto / mies.)">
-            <Input name="salaryMax" type="number" min="0" defaultValue={existing?.salaryMax} />
-          </Field>
         </div>
+        <SalaryScopeFields
+          value={salary}
+          onChange={setSalary}
+          hint={marketHint(state.jobs, existing?.category ?? "build")}
+          askLater={askLater}
+          onLaterAnswered={() => {
+            setAskLater(false);
+            setError("");
+          }}
+        />
         <label className="flex items-start gap-3">
           <Checkbox
             checked={approved}
@@ -324,6 +353,9 @@ export function CompanyEditor() {
           Zobacz profil firmy
         </Link>
       </form>
+      <div className="mt-6">
+        <ReminderSettings />
+      </div>
     </>
   );
 }

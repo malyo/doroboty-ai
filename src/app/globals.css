@@ -11,6 +11,7 @@
 @import "./interactions.css";
 @import "./instrument-host.css";
 @import "./research.css";
+@import "./recruiting-status.css";
 
 @theme inline {
   --color-background: var(--background);

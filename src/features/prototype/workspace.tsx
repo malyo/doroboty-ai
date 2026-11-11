@@ -17,6 +17,7 @@ import { CvAttachment } from "./cv-attachment";
 import { MatchScore } from "./match-score";
 import { RecruitingApplication } from "./recruiting-application";
 import { CandidateApplication } from "./candidate-application";
+import { ConditionsFields, type ConditionsDraft } from "@/features/applications/conditions-fields";
 
 export function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -254,6 +255,7 @@ export function ApplyPage() {
   const generated = draft?.generated ?? "";
   const [answer, setAnswer] = useState(draft?.answer ?? "");
   const [consent, setConsent] = useState(false);
+  const [conditions, setConditions] = useState<ConditionsDraft>({});
   const [message, setMessage] = useState("");
   const [attempted, setAttempted] = useState(false);
   const answerInput = useRef<HTMLTextAreaElement>(null);
@@ -295,7 +297,25 @@ export function ApplyPage() {
       document.getElementById("application-consent")?.focus();
       return;
     }
-    if (run({ type: "submit", jobId: job!.id, notes, generated, answer, consent })) {
+    const minSalary = Number((conditions.minSalary ?? "").replace(/\s/g, ""));
+    if (
+      run({
+        type: "submit",
+        jobId: job!.id,
+        notes,
+        generated,
+        answer,
+        consent,
+        conditions: {
+          minSalary:
+            Number.isFinite(minSalary) && minSalary > 0 ? Math.round(minSalary) : undefined,
+          workMode: conditions.workMode || undefined,
+          availability: conditions.availability || undefined,
+          responseTime: conditions.responseTime || undefined,
+          band: conditions.band || undefined,
+        },
+      })
+    ) {
       submittedOnce.current = true;
       setSubmitted(true);
       if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -336,6 +356,12 @@ export function ApplyPage() {
               contextLabel="CV z Twojego profilu"
             />
           </section>
+          <ConditionsFields
+            job={job}
+            value={conditions}
+            disabled={submitted}
+            onChange={setConditions}
+          />
           <section
             className="application-form-section application-answer"
             aria-label="Odpowiedź do aplikacji"

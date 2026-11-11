@@ -61,6 +61,11 @@ export type Job = {
   publishedAt: string;
   expiryAt: string;
   verificationStatus: "unverified" | "editorial" | "employer_verified";
+  /** EXP3: the employer deliberately postponed the salary range ("Dodam później"). */
+  salaryLater?: boolean;
+  firstProject?: string;
+  mandate?: string;
+  processForm?: string;
 };
 
 export type JobWithCompany = Job & { company: Company };

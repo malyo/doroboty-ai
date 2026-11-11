@@ -3,18 +3,28 @@
  * deterministically, so every test session sees the same lists. Nothing here is sent anywhere.
  */
 
-export type ResponseTime = "3d" | "7d" | "14d" | "any";
-export type WorkMode = "remote" | "hybrid" | "onsite" | "any";
-export type Availability = "now" | "2w" | "1m" | "3m";
-export type SalaryBand = "low" | "mid" | "high" | "none";
-
-export type CandidateConditions = {
-  minSalary?: number;
-  workMode?: WorkMode;
-  availability?: Availability;
-  responseTime?: ResponseTime;
-  band?: SalaryBand;
-};
+import type { CandidateConditions } from "@/features/applications/conditions";
+export {
+  availabilityLabels,
+  bandLabels,
+  bandRanges,
+  responseTimeDays,
+  responseTimeLabels,
+  workModeLabels,
+} from "@/features/applications/conditions";
+export type {
+  Availability,
+  CandidateConditions,
+  ResponseTime,
+  SalaryBand,
+  WorkMode,
+} from "@/features/applications/conditions";
+import type {
+  Availability,
+  ResponseTime,
+  SalaryBand,
+  WorkMode,
+} from "@/features/applications/conditions";
 
 export type ResearchApplication = {
   id: string;
@@ -34,37 +44,6 @@ export type ResearchJob = {
   location: string;
   salary: { min: number; max: number; contract: string };
   scope: string;
-};
-
-export const responseTimeLabels: Record<ResponseTime, string> = {
-  "3d": "Do 3 dni",
-  "7d": "Do tygodnia",
-  "14d": "Do 2 tygodni",
-  any: "Bez znaczenia",
-};
-export const responseTimeDays: Record<ResponseTime, number | undefined> = {
-  "3d": 3,
-  "7d": 7,
-  "14d": 14,
-  any: undefined,
-};
-export const workModeLabels: Record<WorkMode, string> = {
-  remote: "Zdalnie",
-  hybrid: "Hybrydowo",
-  onsite: "Stacjonarnie",
-  any: "Bez znaczenia",
-};
-export const availabilityLabels: Record<Availability, string> = {
-  now: "Od zaraz",
-  "2w": "Za 2 tygodnie",
-  "1m": "Za miesiąc",
-  "3m": "Za 3 miesiące",
-};
-export const bandLabels: Record<SalaryBand, string> = {
-  low: "Dolna część",
-  mid: "Środek",
-  high: "Górna część",
-  none: "Nie wskazuję",
 };
 
 /** Two postings for EXP1, so variant A and B can run on different lists. */
@@ -284,17 +263,6 @@ export const p3Applications: ResearchApplication[] = [
     conditions: { minSalary: 29000, availability: "2w", responseTime: "14d", band: "none" },
   },
 ];
-
-/** Splits salary range into thirds, so "lower / middle / upper part" has concrete numbers. */
-export function bandRanges(min: number, max: number): Record<"low" | "mid" | "high", string> {
-  const step = (max - min) / 3;
-  const fmt = (n: number) => new Intl.NumberFormat("pl-PL").format(Math.round(n / 100) * 100);
-  return {
-    low: `${fmt(min)}–${fmt(min + step)} zł`,
-    mid: `${fmt(min + step)}–${fmt(min + 2 * step)} zł`,
-    high: `${fmt(min + 2 * step)}–${fmt(max)} zł`,
-  };
-}
 
 export function formatSalary(min: number, max: number) {
   const fmt = new Intl.NumberFormat("pl-PL");

@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ApplicationRecord } from "./application-record";
+import { CandidateStatusPanel } from "@/features/applications/status";
 import type { Application } from "./model";
 import { usePrototype } from "./store";
 
@@ -27,6 +28,12 @@ export function CandidateApplication({ application }: { application: Application
         application={application}
         companyName={company?.name ?? ""}
         audience="candidate"
+        status={
+          <CandidateStatusPanel
+            application={application}
+            job={state.jobs.find((x) => x.id === application.jobId)}
+          />
+        }
         history={application.events.map(({ stage, at }) => ({ stage, at }))}
         statusRef={statusRef}
         footer={
