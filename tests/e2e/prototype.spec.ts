@@ -1041,3 +1041,19 @@ test("forms warn against real personal data and a crash keeps the saved data rea
   await expect(page.getByRole("button", { name: "Pobierz kopię danych" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Wczytaj ponownie" })).toBeVisible();
 });
+
+test("a change saved in one tab appears in another tab without reload", async ({
+  page,
+  context,
+}) => {
+  await choose(page, "Anna Kowalska");
+  const other = await context.newPage();
+  await other.goto("/#/app/zapisane");
+  await expect(other.getByText("Nie masz jeszcze zapisanych ofert.")).toBeVisible();
+  await page.goto("/#/oferty/ai-product-manager");
+  await page.getByRole("button", { name: "Zapisz ofertę", exact: true }).click();
+  await expect(other.getByRole("link", { name: "AI Product Manager" }).first()).toBeVisible();
+  // The other tab adopted the saved state, so its next save keeps the saved offer.
+  await other.reload();
+  await expect(other.getByRole("link", { name: "AI Product Manager" }).first()).toBeVisible();
+});

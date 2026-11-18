@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { readFile } from "node:fs/promises";
 
 const RESEARCH_KEY = "doroboty-research-v1";
 
@@ -153,4 +154,42 @@ test("facilitator panel exports the event log and starts a new session", async (
   await page.getByRole("button", { name: "Nowa sesja" }).click();
   await page.getByRole("button", { name: "Wyczyść i zacznij" }).click();
   await expect(page.locator(".empty")).toContainText("0 zdarzeń");
+});
+
+test("facilitator imports an exported session JSON and rejects an invalid file", async ({
+  page,
+}) => {
+  await page.goto("/#/badanie");
+  await page.getByLabel("Uczestnik (kod, bez danych osobowych)").fill("R02");
+  await page.goto("/#/badanie/p1/ml/A");
+  await page.getByRole("checkbox").first().check();
+  await page.goto("/#/badanie");
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Eksportuj JSON" }).click();
+  const exported = await readFile((await (await download).path())!, "utf8");
+  const events = (JSON.parse(exported) as { events: unknown[] }).events.length;
+  expect(events).toBeGreaterThan(0);
+
+  await page.getByRole("button", { name: "Nowa sesja" }).click();
+  await page.getByRole("button", { name: "Wyczyść i zacznij" }).click();
+  await expect(page.locator(".empty")).toContainText("0 zdarzeń");
+
+  const input = page.getByLabel("Importuj dziennik sesji (JSON)");
+  await input.setInputFiles({
+    name: "zly.json",
+    mimeType: "application/json",
+    buffer: Buffer.from('{"events":"broken"'),
+  });
+  await expect(page.getByRole("alert")).toContainText("To nie jest poprawny plik dziennika");
+  await expect(page.locator(".empty")).toContainText("0 zdarzeń");
+
+  await input.setInputFiles({
+    name: "badanie-R02.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(exported),
+  });
+  await page.getByRole("button", { name: "Importuj", exact: true }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Wczytano sesję R02" })).toBeVisible();
+  await expect(page.getByLabel("Uczestnik (kod, bez danych osobowych)")).toHaveValue("R02");
+  await expect(page.locator(".event-list .row")).not.toHaveCount(0);
 });
