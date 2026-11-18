@@ -96,6 +96,11 @@ export function Shell() {
         : candidateNav;
   const content = (
     <>
+      {(workspace || pathname.startsWith("/aplikuj")) && (
+        <p className="prototype-notice">
+          Dane przykładowe: nie wpisuj prawdziwych danych osobowych ani poufnych informacji.
+        </p>
+      )}
       <>
         {issue && (
           <Notice>

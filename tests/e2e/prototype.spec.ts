@@ -1016,3 +1016,28 @@ test("candidate snapshot supports custom CV and long content at desktop and mobi
     record.answer,
   );
 });
+test("forms warn against real personal data and a crash keeps the saved data reachable", async ({
+  page,
+}) => {
+  await choose(page, "Anna Kowalska");
+  await page.goto("/#/app/profil");
+  await expect(
+    page.getByText("Dane przykładowe: nie wpisuj prawdziwych danych osobowych"),
+  ).toBeVisible();
+  await page.goto("/#/aplikuj/ai-product-manager");
+  await expect(
+    page.getByText("Dane przykładowe: nie wpisuj prawdziwych danych osobowych"),
+  ).toBeVisible();
+  await page.evaluate(() => {
+    Array.prototype.filter = () => {
+      throw new Error("forced render failure");
+    };
+  });
+  await page.evaluate(() => {
+    window.location.hash = "#/oferty";
+  });
+  const alert = page.getByRole("alert");
+  await expect(alert).toContainText("Coś poszło nie tak");
+  await expect(page.getByRole("button", { name: "Pobierz kopię danych" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Wczytaj ponownie" })).toBeVisible();
+});

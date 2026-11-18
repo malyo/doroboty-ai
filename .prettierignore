@@ -10,3 +10,4 @@ docs/design-system/agent-kit/
 
 # Project skill sources stay byte-identical to what the user supplied.
 .claude/skills/
+docs/production-readiness.html
