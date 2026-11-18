@@ -1,18 +1,40 @@
-import { useState } from "react";
+import { useState, type ChangeEvent } from "react";
 import { Link, useNavigate } from "react-router";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/confirm-dialog";
 import { downloadText } from "@/features/prototype/settings";
 import { p1Jobs } from "./data";
 import { counter, formatDateTime, scenarioLabels, useScreenOpen } from "./components";
-import { eventsToCsv, useResearch, type P2Scenario } from "./store";
+import { plural } from "@/lib/plural";
+import { MAX_RESEARCH_BYTES, parseResearchExport } from "./schema";
+import { eventsToCsv, initialResearchState, useResearch, type P2Scenario } from "./store";
 
 /** Facilitator panel: participant, task order, scenario, paths for every task and the event log. */
 export function ResearchHub() {
   useScreenOpen("HUB", "panel");
-  const { state, update, log, newSession } = useResearch();
+  const { state, update, log, newSession, importSession } = useResearch();
   const navigate = useNavigate();
   const [confirming, setConfirming] = useState(false);
+  const [importRaw, setImportRaw] = useState<string | null>(null);
+  const [importNote, setImportNote] = useState<{ error: boolean; text: string } | null>(null);
+  /** Reads a file from "Eksportuj JSON"; validates before asking to replace the session. */
+  async function readImport(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    setImportNote(null);
+    if (!file) return;
+    if (file.size > MAX_RESEARCH_BYTES) {
+      setImportNote({ error: true, text: "Plik jest za duży (maksymalnie 2 MB)." });
+      return;
+    }
+    try {
+      const raw = await file.text();
+      parseResearchExport(raw, initialResearchState());
+      setImportRaw(raw);
+    } catch (error) {
+      setImportNote({ error: true, text: (error as Error).message });
+    }
+  }
   const [aJob, bJob] =
     state.p1Order === "ml-first" ? [p1Jobs[0], p1Jobs[1]] : [p1Jobs[1], p1Jobs[0]];
   const fileBase = `badanie-${state.participant.trim().replace(/[^\p{L}\p{N}-]+/gu, "-") || "uczestnik"}`;
@@ -255,11 +277,29 @@ export function ResearchHub() {
               >
                 Eksportuj CSV
               </Button>
+              <Button variant="outline" render={<label />}>
+                Importuj JSON
+                <input
+                  className="sr-only"
+                  type="file"
+                  accept="application/json,.json"
+                  aria-label="Importuj dziennik sesji (JSON)"
+                  onChange={readImport}
+                />
+              </Button>
               <button type="button" className="tx" onClick={() => setConfirming(true)}>
                 Nowa sesja
               </button>
             </div>
           </div>
+          {importNote && (
+            <p
+              className={importNote.error ? "error-message" : "t-meta"}
+              role={importNote.error ? "alert" : "status"}
+            >
+              {importNote.text}
+            </p>
+          )}
           {state.events.length ? (
             <div className="list event-list" style={eventColumns}>
               <div className="thead" aria-hidden="true">
@@ -304,6 +344,29 @@ export function ResearchHub() {
         onConfirm={() => {
           newSession();
           setConfirming(false);
+        }}
+      />
+      <ConfirmDialog
+        open={importRaw !== null}
+        title="Zastąpić bieżącą sesję?"
+        description="Dziennik i stan prototypów zostaną zastąpione danymi z pliku. Najpierw wyeksportuj bieżącą sesję, jeśli jest potrzebna."
+        label="Importuj"
+        pending={false}
+        onOpenChange={(open) => {
+          if (!open) setImportRaw(null);
+        }}
+        onConfirm={() => {
+          try {
+            importSession(importRaw ?? "");
+            const imported = parseResearchExport(importRaw ?? "", initialResearchState());
+            setImportNote({
+              error: false,
+              text: `Wczytano sesję ${imported.participant || "bez kodu uczestnika"}: ${imported.events.length} ${plural(imported.events.length, "zdarzenie", "zdarzenia", "zdarzeń")}.`,
+            });
+          } catch (error) {
+            setImportNote({ error: true, text: (error as Error).message });
+          }
+          setImportRaw(null);
         }}
       />
     </>

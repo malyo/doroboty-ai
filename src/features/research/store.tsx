@@ -1,6 +1,14 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import type { CandidateConditions } from "./data";
+import {
+  parseResearchExport,
+  withDefaults,
+  type P2Scenario,
+  type P3Job,
+  type ResearchEvent,
+  type ResearchState,
+  type StatusMessage,
+} from "./schema";
 
 /**
  * Local state of the research prototypes (EXP1–EXP3): facilitator settings, what each side did
@@ -8,55 +16,9 @@ import type { CandidateConditions } from "./data";
  */
 export const RESEARCH_STORAGE_KEY = "doroboty-research-v1";
 
-export type ResearchEvent = {
-  at: string;
-  /** Milliseconds since the session started (facilitator's "Nowa sesja"). */
-  ms: number;
-  prototype: "P1" | "P2" | "P3" | "HUB";
-  type: string;
-  data?: Record<string, unknown>;
-};
-
-export type P2Scenario = "silence" | "queue" | "message" | "message-no-salary";
-
-export type StatusMessage = { reason: string; nextContact: string; sentAt: string; to: number };
-
-export type P3Job = {
-  title: string;
-  location: string;
-  salaryMin?: number;
-  salaryMax?: number;
-  contract: string;
-  salaryLater: boolean;
-  firstProject: string;
-  mandate: string;
-  process: string;
-  publishedAt: string;
-};
-
-export type ResearchState = {
-  sessionStartedAt: string;
-  participant: string;
-  /** Which posting runs variant A in task 1 (the other runs B); swapped between participants. */
-  p1Order: "ml-first" | "pm-first";
-  p2: {
-    scenario: P2Scenario;
-    askAfterDays: number;
-    considering: Record<string, string>;
-    statusMessages: StatusMessage[];
-    question?: { askedAt: string; answer?: "considering" | "rejected"; answeredAt?: string };
-    withdrawnAt?: string;
-    reminder: {
-      enabled: boolean;
-      days: number;
-      audience: "all" | "preference";
-      reason: string;
-      savedAt?: string;
-    };
-  };
-  p3: { job?: P3Job; conditions?: CandidateConditions & { submittedAt: string; skipped: boolean } };
-  events: ResearchEvent[];
-};
+export type { ResearchEvent, P2Scenario, StatusMessage, P3Job, ResearchState };
+/** Where an unreadable save is kept before the store starts a clean session. */
+export const RESEARCH_BACKUP_KEY = `${RESEARCH_STORAGE_KEY}.unreadable`;
 
 export function initialResearchState(): ResearchState {
   return {
@@ -80,19 +42,29 @@ export function initialResearchState(): ResearchState {
   };
 }
 
+/**
+ * Reads the saved session through the shared Zod schema. An unreadable save is copied to
+ * RESEARCH_BACKUP_KEY before a clean session starts, so a later save cannot destroy it.
+ */
+export function loadResearchState(storage: Pick<Storage, "getItem" | "setItem">): ResearchState {
+  let raw: string | null = null;
+  try {
+    raw = storage.getItem(RESEARCH_STORAGE_KEY);
+    if (!raw) return initialResearchState();
+    return withDefaults(JSON.parse(raw), initialResearchState());
+  } catch {
+    try {
+      if (raw) storage.setItem(RESEARCH_BACKUP_KEY, raw);
+    } catch {
+      // Storage is full or blocked; nothing more can be preserved.
+    }
+    return initialResearchState();
+  }
+}
+
 function load(): ResearchState {
   try {
-    const raw = localStorage.getItem(RESEARCH_STORAGE_KEY);
-    if (!raw) return initialResearchState();
-    const parsed = JSON.parse(raw) as Partial<ResearchState>;
-    const base = initialResearchState();
-    return {
-      ...base,
-      ...parsed,
-      p2: { ...base.p2, ...parsed.p2, reminder: { ...base.p2.reminder, ...parsed.p2?.reminder } },
-      p3: { ...parsed.p3 },
-      events: Array.isArray(parsed.events) ? parsed.events : [],
-    };
+    return loadResearchState(localStorage);
   } catch {
     return initialResearchState();
   }
@@ -107,6 +79,8 @@ type ResearchContext = {
     data?: Record<string, unknown>,
   ) => void;
   newSession: () => void;
+  /** Validates an exported session file and replaces the current session. Throws a Polish message. */
+  importSession: (raw: string) => void;
 };
 
 const Context = createContext<ResearchContext | null>(null);
@@ -149,9 +123,13 @@ export function ResearchProvider({ children }: { children: ReactNode }) {
   const newSession = useCallback(() => {
     setState((current) => ({ ...initialResearchState(), p1Order: current.p1Order }));
   }, []);
+  const importSession = useCallback((raw: string) => {
+    const next = parseResearchExport(raw, initialResearchState());
+    setState(next);
+  }, []);
   const value = useMemo(
-    () => ({ state, update, log, newSession }),
-    [state, update, log, newSession],
+    () => ({ state, update, log, newSession, importSession }),
+    [state, update, log, newSession, importSession],
   );
   return <Context.Provider value={value}>{children}</Context.Provider>;
 }

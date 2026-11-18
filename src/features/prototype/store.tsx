@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { initialState, transition, type Action, type State } from "./model";
-import { parseState, readState, saveState, type StoragePort } from "./storage";
+import { STORAGE_KEY, parseState, readState, saveState, type StoragePort } from "./storage";
 function browserStorage(): StoragePort | null {
   try {
     return window.localStorage;
@@ -54,6 +54,23 @@ function useStore() {
   useEffect(() => {
     document.documentElement.classList.remove("dark");
   }, []);
+  // Another tab saved the scenario: adopt it, so this tab's next save cannot silently undo it.
+  // While this tab protects an unreadable save (blocked) it keeps working in memory only.
+  useEffect(() => {
+    function sync(event: StorageEvent) {
+      if (event.key !== STORAGE_KEY || event.newValue === null || blocked) return;
+      try {
+        const next = parseState(event.newValue);
+        latest.current = next;
+        setState(next);
+        setIssue("");
+      } catch {
+        // An invalid write from elsewhere is ignored; this tab keeps its valid state.
+      }
+    }
+    window.addEventListener("storage", sync);
+    return () => window.removeEventListener("storage", sync);
+  }, [blocked]);
   return {
     state,
     issue,
