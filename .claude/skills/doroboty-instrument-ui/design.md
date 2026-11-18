@@ -366,7 +366,7 @@ Wyrenderuj ekran przy 1440 i 390 px i obejrzyj zapisany obraz:
 
 ## 11. Otwarte kwestie
 
-1. **Checkbox zaznaczenia** ma zielony akcent (`accent-color: --signal`). To łamie zasadę 4 i ma 1,8:1 na białym. Propozycja: `--ink`.
+1. ~~Checkbox zaznaczenia był zielony.~~ **Rozwiązane 2026-11-18:** `accent-color: --ink`.
 2. **Akcja główna listy ofert kandydata** jest nieustalona [Decyzja: na razie brak `.cta`].
 3. **Klikalny wiersz:** cały `<a class="row">` czy tylko link w nazwie? Dziś są oba wzorce.
 4. **Semantyka listy:** `<table>` czy role ARIA na siatce divów.

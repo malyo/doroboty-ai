@@ -651,7 +651,12 @@
   width: 16px;
   height: 16px;
   margin: 0;
-  accent-color: var(--signal);
+  /* Ink, not green: green means only "available" (skill decision 2026-11-18). */
+  accent-color: var(--ink);
+}
+/* Light on an inverted row so the box stays visible. */
+.ins .row.sl .chk {
+  accent-color: var(--console-ink);
 }
 /* wiersz wybrany / na shortliście (punkt kontrastu nr 2) */
 .ins .row.sl {

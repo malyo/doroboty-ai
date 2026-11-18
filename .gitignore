@@ -8,3 +8,6 @@ artifacts/
 *.tsbuildinfo
 .env*
 npm-debug.log*
+
+# Generated publish folder of the Instrument prototypes (python3 docs/instrument/build_site.py).
+docs/instrument/site/

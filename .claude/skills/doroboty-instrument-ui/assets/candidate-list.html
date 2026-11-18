@@ -166,7 +166,8 @@
 .ins .row .who{display:flex;flex-direction:column;gap:2px;min-width:0}
 .ins .row .who .t-meta{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ins .row .who a{color:inherit;text-decoration:none}.ins .row .who a:hover{text-decoration:underline}
-.ins .chk{width:16px;height:16px;margin:0;accent-color:var(--signal)}
+.ins .chk{width:16px;height:16px;margin:0;accent-color:var(--ink)} /* czarny, nie zielony: zielony znaczy tylko „dostępny” (decyzja 2026-11-18) */
+.ins .row.sl .chk{accent-color:var(--console-ink)} /* na ciemnym wierszu jasny, żeby pole było widoczne */
 /* wiersz wybrany / na shortliście (punkt kontrastu nr 2) */
 .ins .row.sl{background:var(--console);color:var(--console-ink)}
 .ins .row.sl::before{background:var(--console-line)}

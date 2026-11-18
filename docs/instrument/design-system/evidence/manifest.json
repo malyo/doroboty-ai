@@ -1,0 +1,308 @@
+[
+ {
+  "id": "topbar-d",
+  "source": "S01",
+  "file": "prototypes/kandydat-oferty.html",
+  "viewport": 1440,
+  "selector": "nav.topbar",
+  "caption": "Nawigacja globalna, kandydat",
+  "cropped_height": null
+ },
+ {
+  "id": "topbar-e",
+  "source": "S04",
+  "file": "prototypes/pracodawca-ogloszenia.html",
+  "viewport": 1440,
+  "selector": "nav.topbar",
+  "caption": "Nawigacja globalna, pracodawca",
+  "cropped_height": null
+ },
+ {
+  "id": "topbar-m",
+  "source": "S01",
+  "file": "prototypes/kandydat-oferty.html",
+  "viewport": 390,
+  "selector": "nav.topbar",
+  "caption": "Nawigacja na 390 px (przewijana poziomo)",
+  "cropped_height": null
+ },
+ {
+  "id": "console-d",
+  "source": "S03",
+  "file": "prototypes/pulpit-pracodawcy.html",
+  "viewport": 1440,
+  "selector": "header.console",
+  "caption": "Pulpit z 4 licznikami, w tym zielonym",
+  "cropped_height": null
+ },
+ {
+  "id": "console-c",
+  "source": "S01",
+  "file": "prototypes/kandydat-oferty.html",
+  "viewport": 1440,
+  "selector": "header.console",
+  "caption": "Pulpit kandydata (bez zieleni)",
+  "cropped_height": null
+ },
+ {
+  "id": "console-m",
+  "source": "S01",
+  "file": "prototypes/kandydat-oferty.html",
+  "viewport": 390,
+  "selector": "header.console",
+  "caption": "Pulpit na 390 px: 2 liczniki",
+  "cropped_height": null
+ },
+ {
+  "id": "cta-sechead",
+  "source": "S04",
+  "file": "prototypes/pracodawca-ogloszenia.html",
+  "viewport": 1440,
+  "selector": ".sec-head",
+  "caption": "Nagłówek sekcji + .cta (Dodaj ogłoszenie)",
+  "cropped_height": null
+ },
+ {
+  "id": "cta2-sechead",
+  "source": "S01",
+  "file": "prototypes/kandydat-oferty.html",
+  "viewport": 1440,
+  "selector": ".sec-head",
+  "caption": "Nagłówek sekcji + .cta2 (Powiadamiaj o nowych)",
+  "cropped_height": null
+ },
+ {
+  "id": "side-cand",
+  "source": "S02",
+  "file": "prototypes/kandydat-oferta.html",
+  "viewport": 1440,
+  "selector": "aside.side",
+  "caption": "Karta faktów: .kv + .cta.wide + .cta2.wide (przełącznik)",
+  "cropped_height": null
+ },
+ {
+  "id": "side-emp",
+  "source": "S05",
+  "file": "prototypes/pracodawca-ogloszenie.html",
+  "viewport": 1440,
+  "selector": "aside.side",
+  "caption": "Karta wyników: .kv + .cta + .cta2 + linki .tx",
+  "cropped_height": null
+ },
+ {
+  "id": "side-m",
+  "source": "S02",
+  "file": "prototypes/kandydat-oferta.html",
+  "viewport": 390,
+  "selector": "aside.side",
+  "caption": "Karta faktów na 390 px",
+  "cropped_height": null
+ },
+ {
+  "id": "filters-d",
+  "source": "S01",
+  "file": "prototypes/kandydat-oferty.html",
+  "viewport": 1440,
+  "selector": ".filters",
+  "caption": "Filtry: komórki .fpill (jedna aktywna) + .fsearch z kbd",
+  "cropped_height": null
+ },
+ {
+  "id": "filters-choice",
+  "source": "S04",
+  "file": "prototypes/pracodawca-ogloszenia.html",
+  "viewport": 1440,
+  "selector": ".filters",
+  "caption": "Filtr stanu jako .choice + .fsearch",
+  "cropped_height": null
+ },
+ {
+  "id": "filters-m",
+  "source": "S01",
+  "file": "prototypes/kandydat-oferty.html",
+  "viewport": 390,
+  "selector": ".filters",
+  "caption": "Filtry na 390 px (przewijane)",
+  "cropped_height": null
+ },
+ {
+  "id": "filters-count",
+  "source": "S07",
+  "file": ".claude/skills/doroboty-instrument-ui/assets/candidate-list.html",
+  "viewport": 1440,
+  "selector": ".filters",
+  "caption": "Filtry z licznikiem wyników .count",
+  "cropped_height": null
+ },
+ {
+  "id": "list-posts",
+  "source": "S04",
+  "file": "prototypes/pracodawca-ogloszenia.html",
+  "viewport": 1440,
+  "selector": ".list.posts",
+  "caption": "Lista-tabela ogłoszeń: .thead, wiersze .sl z .why, stany",
+  "cropped_height": 560
+ },
+ {
+  "id": "list-cands",
+  "source": "S07",
+  "file": ".claude/skills/doroboty-instrument-ui/assets/candidate-list.html",
+  "viewport": 1440,
+  "selector": "main.list",
+  "caption": "Lista kandydatów: .chk, .nr, .seg, .rate, .badge (4 stany), .upd",
+  "cropped_height": null
+ },
+ {
+  "id": "list-offers",
+  "source": "S01",
+  "file": "prototypes/kandydat-oferty.html",
+  "viewport": 1440,
+  "selector": ".list.offers",
+  "caption": "Lista ofert: .logo, .chip trybu, .save",
+  "cropped_height": 420
+ },
+ {
+  "id": "list-m",
+  "source": "S01",
+  "file": "prototypes/kandydat-oferty.html",
+  "viewport": 390,
+  "selector": ".list.offers",
+  "caption": "Wiersz jako karta na 390 px",
+  "cropped_height": 640
+ },
+ {
+  "id": "list-posts-m",
+  "source": "S04",
+  "file": "prototypes/pracodawca-ogloszenia.html",
+  "viewport": 390,
+  "selector": ".list.posts",
+  "caption": "Wiersz z data-label na 390 px",
+  "cropped_height": 520
+ },
+ {
+  "id": "chips",
+  "source": "S02",
+  "file": "prototypes/kandydat-oferta.html",
+  "viewport": 1440,
+  "selector": ".chips",
+  "caption": "Chipy faktów w nagłówku szczegółu",
+  "cropped_height": null
+ },
+ {
+  "id": "chips-emp",
+  "source": "S05",
+  "file": "prototypes/pracodawca-ogloszenie.html",
+  "viewport": 1440,
+  "selector": ".chips",
+  "caption": "Chipy z plakietką stanu (Aktywne) na początku",
+  "cropped_height": null
+ },
+ {
+  "id": "spec",
+  "source": "S02",
+  "file": "prototypes/kandydat-oferta.html",
+  "viewport": 1440,
+  "selector": "dl.spec",
+  "caption": "Specyfikacja .spec (Wymagania)",
+  "cropped_height": null
+ },
+ {
+  "id": "steps",
+  "source": "S02",
+  "file": "prototypes/kandydat-oferta.html",
+  "viewport": 1440,
+  "selector": "ol.steps-list",
+  "caption": "Lista kroków procesu",
+  "cropped_height": null
+ },
+ {
+  "id": "fig-funnel",
+  "source": "S05",
+  "file": "prototypes/pracodawca-ogloszenie.html",
+  "viewport": 1440,
+  "selector": "figure.fig",
+  "caption": "Ramka .fig z wykresem lejka i podpisem Fig. 1",
+  "cropped_height": null
+ },
+ {
+  "id": "fig-chart",
+  "source": "S03",
+  "file": "prototypes/pulpit-pracodawcy.html",
+  "viewport": 1440,
+  "selector": "figure.fig",
+  "caption": "Ramka .fig z wykresem słupkowym",
+  "cropped_height": null
+ },
+ {
+  "id": "kv-panel",
+  "source": "S03",
+  "file": "prototypes/pulpit-pracodawcy.html",
+  "viewport": 1440,
+  "selector": "dl.kv.panel",
+  "caption": ".kv w ramce .panel",
+  "cropped_height": null
+ },
+ {
+  "id": "actbar",
+  "source": "S07",
+  "file": ".claude/skills/doroboty-instrument-ui/assets/candidate-list.html",
+  "viewport": 1440,
+  "selector": ".actbar",
+  "caption": "Pasek akcji zbiorczych (2 zaznaczone)",
+  "cropped_height": null
+ },
+ {
+  "id": "form-panel",
+  "source": "S09",
+  "file": ".claude/skills/doroboty-instrument-ui/assets/job-form.html",
+  "viewport": 1440,
+  "selector": ".panel",
+  "caption": "Pola formularza: błąd, wybór .choice, select",
+  "cropped_height": null
+ },
+ {
+  "id": "form-err",
+  "source": "S09",
+  "file": ".claude/skills/doroboty-instrument-ui/assets/job-form.html",
+  "viewport": 1440,
+  "selector": ".note-err",
+  "caption": "Podsumowanie błędów .note-err",
+  "cropped_height": null
+ },
+ {
+  "id": "form-actbar",
+  "source": "S09",
+  "file": ".claude/skills/doroboty-instrument-ui/assets/job-form.html",
+  "viewport": 1440,
+  "selector": ".actbar",
+  "caption": "Pasek akcji formularza",
+  "cropped_height": null
+ },
+ {
+  "id": "detail-d",
+  "source": "S02",
+  "file": "prototypes/kandydat-oferta.html",
+  "viewport": 1440,
+  "selector": "main.detail",
+  "caption": "Układ szczegółu: nagłówek, karta faktów, treść (gradient „niebo”)",
+  "cropped_height": 900
+ },
+ {
+  "id": "detail-m",
+  "source": "S02",
+  "file": "prototypes/kandydat-oferta.html",
+  "viewport": 390,
+  "selector": "main.detail",
+  "caption": "Układ szczegółu na 390 px: nagłówek → karta → treść",
+  "cropped_height": 1300
+ },
+ {
+  "id": "profile-head",
+  "source": "S08",
+  "file": ".claude/skills/doroboty-instrument-ui/assets/candidate-profile.html",
+  "viewport": 1440,
+  "selector": "header.d-head",
+  "caption": "Nagłówek profilu (wzorzec skilla)",
+  "cropped_height": null
+ }
+]
