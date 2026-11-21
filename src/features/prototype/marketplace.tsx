@@ -1,4 +1,5 @@
 import { Link, useLocation, useParams, useSearchParams } from "react-router";
+import { trackApplyClicked } from "@/lib/analytics";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { MapPin } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -410,6 +411,9 @@ export function JobPage() {
               <Link
                 className={buttonVariants({ variant: "action", className: "wide" })}
                 to={submitted ? `/app/aplikacje/${submitted.id}` : `/aplikuj/${job.slug}`}
+                onClick={() => {
+                  if (!submitted) trackApplyClicked(job, "/oferty/:slug");
+                }}
               >
                 {submitted ? "Zobacz swoją aplikację" : "Aplikuj"}
               </Link>
@@ -426,6 +430,7 @@ export function JobPage() {
             <Link
               className={buttonVariants({ variant: "action", className: "wide" })}
               to={`/auth/sign-in?audience=candidate&next=${encodeURIComponent(`/aplikuj/${job.slug}`)}`}
+              onClick={() => trackApplyClicked(job, "/oferty/:slug")}
             >
               Wybierz osobę i aplikuj
             </Link>

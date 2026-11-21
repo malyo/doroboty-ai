@@ -4,6 +4,7 @@ import {
   routeTemplate,
   sanitizeProps,
   setAnalyticsTransport,
+  trackApplyClicked,
   trackPageView,
 } from "./analytics";
 
@@ -39,6 +40,21 @@ describe("analytics", () => {
     expect(sent).toEqual([
       ["$pageview", { route: "/oferty/:slug" }],
       ["filter_used", {}],
+    ]);
+  });
+
+  it("sends apply clicks with the job id and category only", () => {
+    const sent: Array<[string, unknown]> = [];
+    setAnalyticsTransport((event, props) => sent.push([event, props]));
+    trackApplyClicked(
+      { id: "growth-lead", category: "lead", email: "a@b.pl", name: "Anna" } as {
+        id: string;
+        category: string;
+      },
+      "/oferty/:slug",
+    );
+    expect(sent).toEqual([
+      ["apply_clicked", { job_id: "growth-lead", category: "lead", source_page: "/oferty/:slug" }],
     ]);
   });
 

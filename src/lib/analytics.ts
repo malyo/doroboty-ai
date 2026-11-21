@@ -25,7 +25,7 @@ export function routeTemplate(pathname: string): string {
 }
 
 // Only these properties may leave the browser. Everything else is dropped.
-const ALLOWED_PROPS = new Set(["route"]);
+const ALLOWED_PROPS = new Set(["route", "job_id", "category", "source_page"]);
 
 export function sanitizeProps(props: Record<string, unknown> = {}): Props {
   const clean: Props = {};
@@ -52,6 +52,11 @@ export function capture(event: string, props?: Record<string, unknown>) {
 export function trackPageView(pathname: string) {
   // `$pageview` feeds PostHog Web Analytics; the URL is rebuilt from the route template.
   capture("$pageview", { route: routeTemplate(pathname) });
+}
+
+/** Anonymous count of apply clicks per public job id. Never includes the person. */
+export function trackApplyClicked(job: { id: string; category: string }, sourcePage: string) {
+  capture("apply_clicked", { job_id: job.id, category: job.category, source_page: sourcePage });
 }
 
 export async function initAnalytics() {
