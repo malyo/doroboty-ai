@@ -1,5 +1,5 @@
 // Privacy-first product analytics (PostHog Cloud EU).
-// Cookieless (memory persistence), anonymous only, no session replay, no autocapture.
+// Cookieless (memory persistence), anonymous only, no session replay; autocapture limited to link/button clicks.
 // Only a route template is sent, never the full URL, query string, slug or free text.
 // Without VITE_POSTHOG_KEY (local dev, tests) every function is a no-op.
 
@@ -70,7 +70,8 @@ export async function initAnalytics() {
     api_host: host,
     persistence: "memory",
     person_profiles: "never",
-    autocapture: false,
+    // Clicks on links/buttons only; no inputs, no copied text, no form values.
+    autocapture: { dom_event_allowlist: ["click"], element_allowlist: ["a", "button"] },
     capture_pageview: false,
     capture_pageleave: false,
     disable_session_recording: true,
@@ -85,6 +86,10 @@ export async function initAnalytics() {
         if (event.event !== "$pageview") {
           props.$current_url = `${location.origin}/`;
           delete props.$pathname;
+        }
+        // Autocaptured elements carry hrefs with hash routes/slugs; drop them.
+        if (Array.isArray(props.$elements)) {
+          for (const el of props.$elements as Array<Record<string, unknown>>) delete el.attr__href;
         }
         delete props.$referrer;
         delete props.$referring_domain;
