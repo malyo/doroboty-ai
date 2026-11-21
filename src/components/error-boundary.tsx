@@ -1,4 +1,5 @@
 import { Component, type ReactNode } from "react";
+import posthog from "posthog-js";
 import { Button } from "@/components/ui/button";
 import { STORAGE_KEY } from "@/features/prototype/storage";
 import { downloadText } from "@/features/prototype/settings";
@@ -8,6 +9,9 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { failed: 
   state = { failed: false };
   static getDerivedStateFromError() {
     return { failed: true };
+  }
+  componentDidCatch(error: Error) {
+    posthog.captureException(error);
   }
   private saved() {
     try {

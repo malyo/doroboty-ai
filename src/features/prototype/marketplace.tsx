@@ -1,5 +1,6 @@
 import { Link, useLocation, useParams, useSearchParams } from "react-router";
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import posthog from "posthog-js";
 import { MapPin } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { BackLink } from "@/components/back-link";
@@ -147,6 +148,10 @@ export function JobsPage() {
       if (value) next.set(key, value);
       else next.delete(key);
     }
+    posthog.capture("job_search_submitted", {
+      has_query: next.has("query"),
+      has_location: next.has("location"),
+    });
     setParams(next);
   }
   const locations = [...new Set(all.flatMap((x) => x.locations))];
@@ -417,7 +422,15 @@ export function JobPage() {
                 className="wide"
                 aria-label="Zapisz ofertę"
                 aria-pressed={saved}
-                onClick={() => run({ type: "toggle_saved", jobId: job.id })}
+                onClick={() => {
+                  if (run({ type: "toggle_saved", jobId: job.id })) {
+                    posthog.capture("job_saved_changed", {
+                      job_id: job.id,
+                      job_category: job.category,
+                      saved: !saved,
+                    });
+                  }
+                }}
               >
                 {saved ? "Zapisana" : "Zapisz ofertę"}
               </Button>
