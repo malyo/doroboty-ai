@@ -8,7 +8,7 @@ Prepare the prototype for PostHog Cloud EU after the Vercel deployment, without 
 
 - No key, no analytics: without `VITE_POSTHOG_KEY` (local dev, tests, CI) nothing is loaded or sent.
 - Cookieless (`persistence: "memory"`), `person_profiles: "never"`, no autocapture, no session replay, no surveys, no feature flags, no IP, off on Do Not Track.
-- The only event is `page_viewed` with the `route` template (e.g. `/oferty/:slug`). No slug, query string, id or free text. Everything else is dropped by an allowlist; `$current_url` is reduced to the origin.
+- The only event is `$pageview` (feeds PostHog Web Analytics) with the `route` template, also used as the `$current_url` path and `$pathname` (e.g. `/oferty/:slug`). No slug, query string, id or free text. Everything else is dropped by an allowlist; `$current_url` is reduced to the origin.
 - Unit tests use a mocked transport; no test data reaches PostHog.
 - The privacy page (PUB-09) states the measurement.
 

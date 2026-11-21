@@ -37,7 +37,7 @@ describe("analytics", () => {
     trackPageView("/oferty/some-job");
     capture("filter_used", { query: "secret", email: "a@b.pl" });
     expect(sent).toEqual([
-      ["page_viewed", { route: "/oferty/:slug" }],
+      ["$pageview", { route: "/oferty/:slug" }],
       ["filter_used", {}],
     ]);
   });

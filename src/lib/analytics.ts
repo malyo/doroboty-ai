@@ -50,7 +50,8 @@ export function capture(event: string, props?: Record<string, unknown>) {
 }
 
 export function trackPageView(pathname: string) {
-  capture("page_viewed", { route: routeTemplate(pathname) });
+  // `$pageview` feeds PostHog Web Analytics; the URL is rebuilt from the route template.
+  capture("$pageview", { route: routeTemplate(pathname) });
 }
 
 export async function initAnalytics() {
@@ -75,13 +76,27 @@ export async function initAnalytics() {
     before_send: (event) => {
       if (event) {
         const props = (event.properties ??= {});
-        props.$current_url = `${location.origin}/`;
+        // Page views carry a template URL built in the transport below; others get the origin.
+        if (event.event !== "$pageview") {
+          props.$current_url = `${location.origin}/`;
+          delete props.$pathname;
+        }
         delete props.$referrer;
         delete props.$referring_domain;
-        delete props.$pathname;
       }
       return event;
     },
   });
-  transport = (event, props) => posthog.capture(event, props);
+  transport = (event, props) => {
+    if (event === "$pageview" && typeof props?.route === "string") {
+      // Hash routing hides the route from the path, so expose the template as the path.
+      posthog.capture(event, {
+        ...props,
+        $current_url: `${location.origin}${props.route}`,
+        $pathname: props.route,
+      });
+      return;
+    }
+    posthog.capture(event, props);
+  };
 }
