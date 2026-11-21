@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, useState } from "react";
+import posthog from "posthog-js";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ApplicationRecord } from "./application-record";
@@ -54,6 +55,10 @@ export function RecruitingApplication({ application }: { application: Applicatio
                     }
                     onClick={() => {
                       if (run({ type: "stage", applicationId: application.id, stage, note })) {
+                        posthog.capture("application_stage_changed", {
+                          from_stage: application.stage,
+                          to_stage: stage,
+                        });
                         setNote("");
                         setAnnouncement(`Zapisano etap: ${stageLabels[stage]}.`);
                         pendingFocus.current = true;

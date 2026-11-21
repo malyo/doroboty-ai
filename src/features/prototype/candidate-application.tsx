@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, useState } from "react";
+import posthog from "posthog-js";
 import { Button } from "@/components/ui/button";
 import { ApplicationRecord } from "./application-record";
 import { CandidateStatusPanel } from "@/features/applications/status";
@@ -52,6 +53,7 @@ export function CandidateApplication({ application }: { application: Application
                   variant="destructive"
                   onClick={() => {
                     if (run({ type: "withdraw", applicationId: application.id })) {
+                      posthog.capture("application_withdrawn");
                       focusAfter.current = "status";
                       setConfirming(false);
                       setAnnouncement("Aplikacja została wycofana.");

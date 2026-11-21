@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from "react";
+import posthog from "posthog-js";
 import { Link } from "react-router";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { MatchScore } from "@/features/prototype/match-score";
@@ -81,6 +82,7 @@ export function EmployerCandidatesPage() {
   function invite() {
     const names = all.filter((x) => selected.includes(x.id)).map((x) => x.candidateName);
     if (run({ type: "invite", applicationIds: selected })) {
+      posthog.capture("candidates_invited", { invitation_count: selected.length });
       setNotice(`Zaproszono na rozmowę: ${names.join(", ")}.`);
       setSelected([]);
       resultsRef.current?.focus();

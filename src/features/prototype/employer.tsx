@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import posthog from "posthog-js";
 import { Link, useNavigate, useParams } from "react-router";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -175,7 +176,16 @@ export function EmployerJobEditor() {
       );
       return;
     }
-    if (run({ type: "publish", job: parsed.data })) navigate("/app/oferty");
+    if (run({ type: "publish", job: parsed.data })) {
+      posthog.capture("job_published", {
+        job_id: parsed.data.id,
+        job_category: parsed.data.category,
+        is_new: !existing,
+        has_salary_range:
+          parsed.data.salaryMin !== undefined && parsed.data.salaryMax !== undefined,
+      });
+      navigate("/app/oferty");
+    }
   }
   return (
     <>
@@ -332,8 +342,10 @@ export function CompanyEditor() {
         name: String(data.get("name")),
         description: String(data.get("description")),
       })
-    )
+    ) {
+      posthog.capture("company_profile_saved");
       setMessage("Dane firmy zostały zapisane.");
+    }
   }
   return (
     <>
