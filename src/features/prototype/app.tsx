@@ -1,4 +1,6 @@
-import { HashRouter, Routes, Route, Navigate } from "react-router";
+import { useEffect } from "react";
+import { HashRouter, Routes, Route, Navigate, useLocation } from "react-router";
+import { trackPageView } from "@/lib/analytics";
 import { PrototypeProvider } from "./store";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { Shell, NotFound } from "./shell";
@@ -173,11 +175,19 @@ function AppRoutes() {
     </Routes>
   );
 }
+function RouteTracker() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    trackPageView(pathname);
+  }, [pathname]);
+  return null;
+}
 export function App() {
   return (
     <ErrorBoundary>
       <PrototypeProvider>
         <HashRouter>
+          <RouteTracker />
           <AppRoutes />
         </HashRouter>
       </PrototypeProvider>

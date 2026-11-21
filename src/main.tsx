@@ -6,6 +6,8 @@ import "@fontsource/dm-mono/500.css";
 import "@fontsource-variable/nunito-sans/opsz.css";
 import "@fontsource/doto/700.css";
 import "./app/globals.css";
+import { initAnalytics } from "./lib/analytics";
+void initAnalytics();
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <App />

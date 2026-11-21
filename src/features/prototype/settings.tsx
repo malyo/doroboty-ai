@@ -125,8 +125,13 @@ export function PrivacyPage() {
         </p>
         <p>
           Profile, aplikacje i ustawienia pozostają w pamięci tej przeglądarki. Aplikacja nie wysyła
-          ich do bazy, dostawcy AI ani systemu analitycznego. Plik eksportu zawiera cały lokalny
-          scenariusz, w tym notatki.
+          ich do bazy ani dostawcy AI. Plik eksportu zawiera cały lokalny scenariusz, w tym notatki.
+        </p>
+        <p>
+          Wdrożona wersja mierzy odsłony anonimowo w PostHog (UE): bez plików cookie, bez profili
+          osób, bez nagrywania sesji i bez zapisu treści. Wysyłamy tylko nazwę widoku, na przykład
+          „/oferty/:slug”, bez adresu, zapytań i danych z formularzy. Pomiar jest wyłączony, gdy
+          przeglądarka zgłasza „Do Not Track”.
         </p>
         <p>
           Możesz usunąć zmiany przyciskiem „Resetuj scenariusz” w ustawieniach lub wyczyścić dane
